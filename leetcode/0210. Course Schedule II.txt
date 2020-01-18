@@ -1,0 +1,86 @@
+/*
+210. Course Schedule II
+
+There are a total of n courses you have to take, labeled from 0 to n-1.
+
+Some courses may have prerequisites, for example to take course 0 you have to first take course 1, which is expressed as a pair: [0,1]
+
+Given the total number of courses and a list of prerequisite pairs, return the ordering of courses you should take to finish all courses.
+
+There may be multiple correct orders, you just need to return one of them. If it is impossible to finish all courses, return an empty array.
+
+Example 1:
+
+Input: 2, [[1,0]] 
+Output: [0,1]
+Explanation: There are a total of 2 courses to take. To take course 1 you should have finished   
+             course 0. So the correct course order is [0,1] .
+Example 2:
+
+Input: 4, [[1,0],[2,0],[3,1],[3,2]]
+Output: [0,1,2,3] or [0,2,1,3]
+Explanation: There are a total of 4 courses to take. To take course 3 you should have finished both     
+             courses 1 and 2. Both courses 1 and 2 should be taken after you finished course 0. 
+             So one correct course order is [0,1,2,3]. Another correct ordering is [0,2,1,3] .
+Note:
+
+The input prerequisites is a graph represented by a list of edges, not adjacency matrices. Read more about how a graph is represented.
+You may assume that there are no duplicate edges in the input prerequisites.
+*/
+class Solution {
+    private HashMap<Integer, HashSet<Integer>> removePreReq(HashMap<Integer, HashSet<Integer>> deps, int req){
+        ArrayList<Integer> keysToRemove = new ArrayList<Integer>();
+        for(int key: deps.keySet()){
+            HashSet<Integer> temp = deps.get(key);
+            if(temp.contains(req))
+                temp.remove(req);
+            if(temp.size() == 0)
+                keysToRemove.add(key);
+            else
+                deps.put(key, temp);
+        }
+        for(int key: keysToRemove){
+            deps.remove(key);
+        }
+        return deps;
+    } 
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        HashMap<Integer, HashSet<Integer>> depList = new HashMap<Integer, HashSet<Integer>>();
+        for(int course = 0; course < prerequisites.length; course++){
+            HashSet<Integer> reqs;
+            if(!depList.containsKey(prerequisites[course][0])){
+                reqs = new HashSet<Integer>();
+            }
+            else{
+                reqs = depList.get(prerequisites[course][0]);
+            }
+            reqs.add(prerequisites[course][1]);
+            depList.put(prerequisites[course][0],reqs);
+        }
+        
+        int taken = 0;
+        int[] chosenCourses = new int[numCourses];
+        int ptr = 0;
+        boolean[] courses = new boolean[numCourses];
+        while(taken < numCourses){
+            boolean courseWasChosen = false;
+            for(int x = 0; x < numCourses; x++){
+                if(!courses[x]){
+                    if(!depList.containsKey(x)){
+                        courses[x] = true;
+                        courseWasChosen = true;
+                        depList = removePreReq(depList, x);
+                        chosenCourses[ptr] = x;
+                        ptr++;
+                        taken++;
+                    }
+                }
+            }
+            if(!courseWasChosen)
+                return new int[0];
+        }
+        
+        return chosenCourses;
+        
+    }
+}

@@ -1,0 +1,73 @@
+/*
+1093. Statistics from a Large Sample
+
+We sampled integers between 0 and 255, and stored the results in an array count:  count[k] is the number of integers we sampled equal to k.
+
+Return the minimum, maximum, mean, median, and mode of the sample respectively, as an array of floating point numbers.  The mode is guaranteed to be unique.
+
+(Recall that the median of a sample is:
+
+The middle element, if the elements of the sample were sorted and the number of elements is odd;
+The average of the middle two elements, if the elements of the sample were sorted and the number of elements is even.)
+ 
+
+Example 1:
+
+Input: count = [0,1,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+Output: [1.00000,3.00000,2.37500,2.50000,3.00000]
+Example 2:
+
+Input: count = [0,4,3,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+Output: [1.00000,4.00000,2.18182,2.00000,1.00000]
+ 
+
+Constraints:
+
+count.length == 256
+1 <= sum(count) <= 10^9
+The mode of the sample that count represents is unique.
+Answers within 10^-5 of the true value will be accepted as correct.
+*/
+class Solution {
+    public double[] sampleStats(int[] count) {
+        double min = Double.MAX_VALUE, max = Double.MIN_VALUE, mean = 0, median = 0, mode = Double.MIN_VALUE, modeCount = Double.MIN_VALUE;
+        double a=0, b=0;
+        int len = 0;
+        for(int ind = 0; ind < count.length; ind++){
+            if(count[ind] > 0){
+                if(ind < min)
+                    min = ind;
+                if(ind > max)
+                    max = ind;
+                if(count[ind] > modeCount){
+                    mode = ind;
+                    modeCount = count[ind];
+                }
+                len = len + count[ind];
+                mean = mean + (count[ind] * ind);
+            }
+        }
+        int counter = 0;
+        boolean foundA = false;
+        for(int ind = 0; ind < count.length; ind++){
+            if(!foundA && (counter + count[ind]) - 1 >= (len/2) - 1){
+                a = (double)ind;
+                foundA = true;
+            }
+            
+            if((counter + count[ind]) - 1 >= (len/2)) {
+                b = (double)ind;
+                break;
+            }
+            
+            counter += count[ind];
+        }
+        double[] result = new double[5];
+        result[0] = min;
+        result[1] = max;
+        result[2] = mean/len;
+        result[3] = len%2==1? a : (a+b)/2;
+        result[4] = mode;
+        return result;
+    }
+}

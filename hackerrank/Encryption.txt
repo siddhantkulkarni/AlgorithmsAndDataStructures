@@ -1,0 +1,100 @@
+//Encryption
+import java.io.*;
+import java.math.*;
+import java.security.*;
+import java.text.*;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.regex.*;
+
+public class Solution {
+
+    // Complete the encryption function below.
+    static String encryption(String s) {
+        s=s.replaceAll(" ","");
+        int rows=(int)Math.floor(Math.sqrt(s.length()));
+        int cols;
+        if(s.length()== rows*rows)
+             cols=rows;
+        else    
+            cols=rows+1;
+        if(rows*cols <=s.length())
+            rows++;
+
+        String[] result=new String[cols];
+        int cc=0;
+        
+        for(int i=0;i<result.length;i++){
+            result[i]="";
+        }
+
+        for(int i=0;i<s.length();i++){
+            result[cc]+=s.charAt(i);
+            cc=(cc+1)%cols;
+        }
+
+        String res="";
+        for(int i=0;i<result.length;i++){
+            res+=result[i];
+
+            if(i!=result.length-1)
+                res+=" ";
+        }
+
+        return res;
+        /*int rows=(int)Math.floor(Math.sqrt(s.length()));
+        int cols=rows+1;
+        if(rows*cols <s.length())
+            rows++;
+        System.out.println("Rows="+rows+" Columns="+cols);
+        char[][] arr=new char[rows][cols];
+        int rc=0,cc=0;
+        for(int i=0;i<s.length();i++){
+            System.out.println("Char="+s.charAt(i));
+            arr[rc][cc]=s.charAt(i);
+            cc++;
+            if(cc==cols){
+                cc=0;
+                rc++;
+            }
+        }
+        String res="";
+        for(int i=0;i<cols;i++){
+            for(int k=0;k<rows;k++){
+                System.out.print(arr[k][i]);
+                if(i==cols-1 && k>=rc){}
+                else
+                res+=arr[k][i];
+            }
+            System.out.println(" ");
+        }
+
+        String res2="";
+        int c2=0;
+        for(int i=0;i<res.length();i++){
+            res2+=res.charAt(i);
+            if((i+1)%(cols-1)==0 && i!=0)
+                res2+=" ";
+
+        }
+        return res2;*/
+
+    }
+
+    private static final Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) throws IOException {
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(System.getenv("OUTPUT_PATH")));
+
+        String s = scanner.nextLine();
+
+        String result = encryption(s);
+
+        bufferedWriter.write(result);
+        bufferedWriter.newLine();
+
+        bufferedWriter.close();
+
+        scanner.close();
+    }
+}

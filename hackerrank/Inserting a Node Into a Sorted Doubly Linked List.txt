@@ -1,0 +1,41 @@
+//Inserting a Node Into a Sorted Doubly Linked List
+
+
+    // Complete the sortedInsert function below.
+
+    /*
+     * For your reference:
+     *
+     * DoublyLinkedListNode {
+     *     int data;
+     *     DoublyLinkedListNode next;
+     *     DoublyLinkedListNode prev;
+     * }
+     *
+     */
+    static DoublyLinkedListNode sortedInsert(DoublyLinkedListNode head, int data) {
+        if(head==null) return new DoublyLinkedListNode(data);
+        DoublyLinkedListNode temp=head;
+        DoublyLinkedListNode toInsert=new DoublyLinkedListNode(data);
+        if(head.data>data){
+            toInsert.next=head;
+            toInsert.prev=null;
+            return toInsert;
+        }
+
+        while(temp.next!=null && temp.next.data<data ){
+            temp=temp.next;
+        }
+
+        if(temp.next!=null){
+            temp.next.prev=toInsert;
+            toInsert.next=temp.next;
+            temp.next=toInsert;
+        }else{
+            temp.next=toInsert;
+            toInsert.prev=temp;
+        }
+
+        return head;
+    }
+

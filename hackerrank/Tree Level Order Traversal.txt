@@ -1,0 +1,28 @@
+//Tree: Level Order Traversal
+
+
+
+/* 
+    
+    class Node 
+    	int data;
+    	Node left;
+    	Node right;
+	*/
+	public static void levelOrder(Node root) {
+      ArrayList<Node> q=new ArrayList<Node>();
+      q.add(root);
+      while(q.size()!=0){
+        Node temp=q.get(0);
+        System.out.print(temp.data + " ");
+        if(temp.left!=null){
+            q.add(temp.left);
+        }
+        if(temp.right!=null){
+            q.add(temp.right);
+        }
+        q.remove(0);
+      }
+
+    }
+

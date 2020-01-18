@@ -1,0 +1,38 @@
+//Delete a Node
+
+
+
+    // Complete the deleteNode function below.
+
+    /*
+     * For your reference:
+     *
+     * SinglyLinkedListNode {
+     *     int data;
+     *     SinglyLinkedListNode next;
+     * }
+     *
+     */
+    static SinglyLinkedListNode deleteNode(SinglyLinkedListNode head, int position) {
+        if(head==null) return null;
+        
+        SinglyLinkedListNode tempA=head;
+        SinglyLinkedListNode tempB=head.next;
+        if(position==0){
+          tempA.next=null;
+          return tempB;  
+        }
+        int counter=0;
+        while(counter<position-1){
+            counter++;
+            tempA=tempA.next;
+            tempB=tempB.next;
+        }
+        //if(tempA==null) return head;
+        tempA.next=tempB.next;
+        if(tempB!=null)
+        tempB.next=null;
+
+        return head;
+    }
+

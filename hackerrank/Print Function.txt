@@ -1,0 +1,9 @@
+#Print Function
+if __name__ == '__main__':
+    n = int(input())
+    stringToPrint= ""
+    for i in range (1,n+1):
+        stringToPrint= stringToPrint + str(i)
+
+    print(stringToPrint)
+

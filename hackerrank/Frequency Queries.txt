@@ -1,0 +1,105 @@
+//Frequency Queries
+import java.io.*;
+import java.math.*;
+import java.security.*;
+import java.text.*;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.function.*;
+import java.util.regex.*;
+import java.util.stream.*;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
+
+public class Solution {
+
+    // Complete the freqQuery function below.
+    static List<Integer> freqQuery(List<int[]> queries) {
+        List<Integer> results=new ArrayList<Integer>();
+        Hashtable<Integer,Integer> forward = new Hashtable<Integer,Integer>();//number,count
+        Hashtable<Integer,Integer> backward = new Hashtable<Integer,Integer>();//counts,number of numbers at that count
+        for(int i=0;i<queries.size();i++){
+            int q=queries.get(i)[0];
+            int n=queries.get(i)[1];
+            switch(q){
+                case 1:
+                    if(forward.containsKey(n)){
+                        int initialCount=forward.get(n);
+                        int newCount=initialCount+1;
+                        forward.put(n,newCount);
+                        backward=updateBackward(backward,initialCount,newCount);
+                    }else{
+                        forward.put(n,1);
+                        backward=updateBackward(backward,0,1);
+                    }
+                    break;
+                case 2:
+                    if(forward.containsKey(n)){
+                        int count=forward.get(n);
+                        if(count==1){
+                            forward.remove(n);
+                            backward=updateBackward(backward,1,0);
+                        } 
+                        else{
+                            int initialCount=count;
+                            int newCount=count-1; 
+                            forward.put(n,newCount);
+                            backward=updateBackward(backward,initialCount,newCount);
+                        } 
+                    }
+                    break;
+                case 3:
+                    if(backward.containsKey(n) && backward.get(n)>0)
+                        results.add(1);
+                    else
+                        results.add(0);
+                    break;
+
+
+            }
+        }
+
+        return results;
+
+    }
+
+    public static Hashtable<Integer,Integer> updateBackward(Hashtable backward,int initialCount,int newCount){
+            if(backward.containsKey(newCount))
+                backward.put(newCount,(int)backward.get(newCount)+1);
+            else
+                backward.put(newCount,1);
+            
+            if(initialCount!=0){
+            backward.put(initialCount,(int)backward.get(initialCount)-1);
+
+            if((int)backward.get(initialCount)==0)
+                backward.remove(initialCount);
+            }
+        return backward;
+    }
+
+   public static void main(String[] args) throws IOException {
+    try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in))) {
+      int q = Integer.parseInt(bufferedReader.readLine().trim());
+      List<int[]> queries = new ArrayList<>(q);
+      Pattern p  = Pattern.compile("^(\\d+)\\s+(\\d+)\\s*$");
+      for (int i = 0; i < q; i++) {
+        int[] query = new int[2];
+        Matcher m = p.matcher(bufferedReader.readLine());
+        if (m.matches()) {
+          query[0] = Integer.parseInt(m.group(1));
+          query[1] = Integer.parseInt(m.group(2));
+          queries.add(query);
+        }
+      }
+      List<Integer> ans = freqQuery(queries);
+      try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(System.getenv("OUTPUT_PATH")))) {
+        bufferedWriter.write(
+                ans.stream()
+                        .map(Object::toString)
+                        .collect(joining("\n"))
+                        + "\n");
+      }
+    }
+  }
+}

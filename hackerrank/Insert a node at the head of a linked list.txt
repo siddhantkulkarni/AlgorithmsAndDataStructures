@@ -1,0 +1,24 @@
+//Insert a node at the head of a linked list
+
+    // Complete the insertNodeAtHead function below.
+
+    /*
+     * For your reference:
+     *
+     * SinglyLinkedListNode {
+     *     int data;
+     *     SinglyLinkedListNode next;
+     * }
+     *
+     */
+    static SinglyLinkedListNode insertNodeAtHead(SinglyLinkedListNode llist, int data) {
+        if(llist==null) return new SinglyLinkedListNode(data);
+        else{
+            SinglyLinkedListNode temp=new SinglyLinkedListNode(data);
+            temp.next=llist;
+            return temp;
+
+        }
+            
+    }
+

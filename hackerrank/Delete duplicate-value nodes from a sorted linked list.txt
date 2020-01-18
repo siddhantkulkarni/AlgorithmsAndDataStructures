@@ -1,0 +1,33 @@
+//Delete duplicate-value nodes from a sorted linked list
+
+
+
+    // Complete the removeDuplicates function below.
+
+    /*
+     * For your reference:
+     *
+     * SinglyLinkedListNode {
+     *     int data;
+     *     SinglyLinkedListNode next;
+     * }
+     *
+     */
+    static SinglyLinkedListNode removeDuplicates(SinglyLinkedListNode head) {
+        if(head==null || head.next==null) return head;
+        SinglyLinkedListNode a=head;
+        SinglyLinkedListNode b=head.next;
+        while(b!=null){
+            if(a.data==b.data){
+                a.next=b.next;
+                b.next=null;
+                b=a.next;
+            }else{
+                a=a.next;
+                b=b.next;
+            }
+        }
+        return head;
+
+    }
+

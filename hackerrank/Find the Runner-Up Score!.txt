@@ -1,0 +1,12 @@
+'''
+Find the Runner-Up Score!
+'''
+if __name__ == '__main__':
+    n = int(raw_input())
+    arr = map(int, raw_input().split())
+    max_val = max(arr)
+    temp_list = list(arr)
+    while max_val in temp_list:
+        temp_list.remove(max_val)
+    print(max(temp_list))
+

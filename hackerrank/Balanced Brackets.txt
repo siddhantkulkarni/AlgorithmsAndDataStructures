@@ -1,0 +1,70 @@
+//Balanced Brackets
+import java.io.*;
+import java.math.*;
+import java.security.*;
+import java.text.*;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.regex.*;
+
+public class Solution {
+
+    // Complete the isBalanced function below.
+    static String isBalanced(String s) {
+        char[] myStack=new char[s.length()];
+        int stackTop=-1;
+        for(int i=0;i<s.length();i++){
+            char ch=s.charAt(i);
+            switch(ch){
+                case '(':
+                case '{':
+                case '[':
+                    stackTop++;
+                    myStack[stackTop]=ch;
+                    break;
+                case ')':
+                    if(stackTop==-1) return "NO";
+                    else if(myStack[stackTop]=='(') stackTop--;
+                    else return "NO";
+                    break;
+                case '}':
+                    if(stackTop==-1) return "NO";
+                    else if(myStack[stackTop]=='{') stackTop--;
+                    else return "NO";
+                    break;
+                case ']':
+                    if(stackTop==-1) return "NO";
+                    else if(myStack[stackTop]=='[') stackTop--;
+                    else return "NO";
+                    break;
+            }
+        }
+        if(stackTop>=0)
+            return "NO";
+        else
+            return "YES";
+
+    }
+
+    private static final Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) throws IOException {
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(System.getenv("OUTPUT_PATH")));
+
+        int t = scanner.nextInt();
+        scanner.skip("(\r\n|[\n\r\u2028\u2029\u0085])?");
+
+        for (int tItr = 0; tItr < t; tItr++) {
+            String s = scanner.nextLine();
+
+            String result = isBalanced(s);
+
+            bufferedWriter.write(result);
+            bufferedWriter.newLine();
+        }
+
+        bufferedWriter.close();
+
+        scanner.close();
+    }
+}

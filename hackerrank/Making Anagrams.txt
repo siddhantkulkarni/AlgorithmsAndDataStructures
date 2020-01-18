@@ -1,0 +1,60 @@
+//Making Anagrams
+import java.io.*;
+import java.math.*;
+import java.security.*;
+import java.text.*;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.regex.*;
+
+public class Solution {
+
+    // Complete the makeAnagram function below.
+    static int makeAnagram(String a, String b) {
+        Hashtable<Character, Integer> aCount=new Hashtable<Character,Integer>();
+        for(int i=0;i<a.length();i++){
+            char ch=a.charAt(i);
+            if(aCount.containsKey(ch))
+                aCount.put(ch,aCount.get(ch)+1);
+            else
+                aCount.put(ch,1);
+        }
+        System.out.println(aCount.toString());
+        int removeCounter=0;
+        for(int i=0;i<b.length();i++){
+            char ch=b.charAt(i);
+            if(aCount.containsKey(ch))
+                if(aCount.get(ch)==1)
+                    aCount.remove(ch);
+                else
+                    aCount.put(ch,aCount.get(ch)-1);
+            else
+                removeCounter++;
+        }
+
+        Object[] keys=aCount.keySet().toArray();
+        for(int i=0;i<keys.length;i++){
+            removeCounter+=aCount.get(keys[i]);
+        }
+        return removeCounter;
+    }
+
+    private static final Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) throws IOException {
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(System.getenv("OUTPUT_PATH")));
+
+        String a = scanner.nextLine();
+
+        String b = scanner.nextLine();
+
+        int res = makeAnagram(a, b);
+
+        bufferedWriter.write(String.valueOf(res));
+        bufferedWriter.newLine();
+
+        bufferedWriter.close();
+
+        scanner.close();
+    }
+}

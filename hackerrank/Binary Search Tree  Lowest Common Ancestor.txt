@@ -1,0 +1,41 @@
+//Binary Search Tree : Lowest Common Ancestor
+
+	/*
+    class Node 
+    	int data;
+    	Node left;
+    	Node right;
+	*/
+    public static ArrayList<Node> searchForNode(Node root,int data){
+        
+        if(root==null) return null;
+        Node temp=root;
+        ArrayList<Node> ancestors=new ArrayList<Node>();
+        while(temp!=null){        
+            ancestors.add(temp);
+            if(temp.data==data)
+                break;
+            
+            if(data>=temp.data)
+                temp=temp.right;
+            else
+                temp=temp.left;
+        }
+        return ancestors;
+    }
+	public static Node lca(Node root, int v1, int v2) {
+      	// Write your code here.
+          if(root==null) return null;
+          if(v1==root.data||v2==root.data) return root;
+
+          ArrayList<Node> ancestorsOfv1=searchForNode(root,v1);
+          ArrayList<Node> ancestorsOfv2=searchForNode(root,v2);
+          for(int i=ancestorsOfv1.size()-1;i>=0;i--){
+              for(int j=ancestorsOfv2.size()-2;j>=0;j--){
+                  if(ancestorsOfv1.get(i).data==ancestorsOfv2.get(j).data)
+                    return ancestorsOfv1.get(i);
+              }
+          }
+          return root;
+    }
+

@@ -1,0 +1,27 @@
+//Tree: Huffman Decoding
+
+/*  
+	class Node
+		public  int frequency; // the frequency of this tree
+    	public  char data;
+    	public  Node left, right;
+    
+*/ 
+
+    void decode(String s, Node root) {
+        Node temp=root;
+        String decodedString="";
+        for(int i=0;i<s.length();i++){
+            if(s.charAt(i)=='0')
+                temp=temp.left;
+            else
+                temp=temp.right;
+
+            if(temp.left==null && temp.right==null){
+                decodedString+=temp.data;
+                temp=root;
+            }
+        }
+        System.out.print(decodedString);
+    }
+

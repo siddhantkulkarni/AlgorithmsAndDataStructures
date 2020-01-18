@@ -1,0 +1,33 @@
+'''
+47. Permutations II
+
+Given a collection of numbers that might contain duplicates, return all possible unique permutations.
+
+Example:
+
+Input: [1,1,2]
+Output:
+[
+  [1,1,2],
+  [1,2,1],
+  [2,1,1]
+]
+'''
+class Solution:
+    def permuteUnique(self, nums: List[int]) -> List[List[int]]:
+        result = []
+        self.permute(nums,[],result);
+        return result
+        
+        
+    
+    def permute(self, nums: List[int], so_far:List[int], result:List[List[int]]):
+        if len(nums) == 1:
+            result.append(so_far + [nums[0]])
+            return None
+        considered = []
+        for x in range(0, len(nums)):
+            if nums[x] not in considered:
+                self.permute(nums[0:x]+nums[x+1:], so_far+[nums[x]],result)
+                considered.append(nums[x])
+        

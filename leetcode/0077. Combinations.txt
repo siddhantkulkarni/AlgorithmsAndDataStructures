@@ -1,0 +1,41 @@
+/*
+    77. Combinations
+
+Given two integers n and k, return all possible combinations of k numbers out of 1 ... n.
+
+Example:
+
+Input: n = 4, k = 2
+Output:
+[
+  [2,4],
+  [3,4],
+  [2,3],
+  [1,2],
+  [1,3],
+  [1,4],
+]    
+*/class Solution {
+    public List<List<Integer>> combine(int n, int k) {
+        List<List<Integer>> result = new ArrayList<List<Integer>>();
+        generateCombinations(n, k, new ArrayList<Integer>(), result);
+        return result;
+    }
+    
+    private void generateCombinations(int range, int max, ArrayList<Integer> soFar, List<List<Integer>> result){
+        if(max == 0){
+            result.add(soFar);
+            return;
+        }
+            
+        HashSet<Integer> hashSoFar = new HashSet(soFar);
+        int lastIndex = soFar.size();
+        for(int x = soFar.size()==0?1:soFar.get(lastIndex-1) + 1; x <= range; x++){
+            if(!hashSoFar.contains(x)){
+                ArrayList<Integer> temp = new ArrayList<Integer>(soFar);
+                temp.add(x);
+                this.generateCombinations(range, max - 1, temp, result);
+            }
+        }
+    }
+}

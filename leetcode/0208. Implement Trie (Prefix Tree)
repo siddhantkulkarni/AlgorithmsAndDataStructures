@@ -1,0 +1,98 @@
+/*
+208. Implement Trie (Prefix Tree)
+
+Implement a trie with insert, search, and startsWith methods.
+
+Example:
+
+Trie trie = new Trie();
+
+trie.insert("apple");
+trie.search("apple");   // returns true
+trie.search("app");     // returns false
+trie.startsWith("app"); // returns true
+trie.insert("app");   
+trie.search("app");     // returns true
+Note:
+
+You may assume that all inputs are consist of lowercase letters a-z.
+All inputs are guaranteed to be non-empty strings.
+*/
+class TreeNode{
+    char val;
+    HashMap<Character, TreeNode> children;
+    boolean isCompleteWord;
+    public TreeNode(char val, boolean isCompleteWord){
+        this.val = val;
+        this.isCompleteWord = isCompleteWord;
+        children = new HashMap<Character, TreeNode>();
+    }
+}
+
+class Trie {
+    TreeNode root = null;
+    /** Initialize your data structure here. */
+    public Trie() {
+        root = new TreeNode('#', false);
+        System.out.println("Trie initialized");
+    }
+    
+    /** Inserts a word into the trie. */
+    public void insert(String word) {
+        addToTree(word, root);
+    }
+    
+    private void addToTree(String word, TreeNode root){
+        if(word.length() == 0)
+            return;
+        
+        char current = word.charAt(0);
+        boolean isCompleteWord = word.length() == 1;
+        if(root == null) System.out.println("ROOT IS NULL");
+        if(!root.children.containsKey(current)){
+            root.children.put(current, new TreeNode(current, isCompleteWord));
+        }else{
+            root.children.get(current).isCompleteWord = root.children.get(current).isCompleteWord || isCompleteWord; 
+        }
+        
+        addToTree(word.substring(1), root.children.get(current));
+    }
+    
+    /** Returns if the word is in the trie. */
+    public boolean search(String word) {
+        return searchWord(word, root);
+    }
+    
+    private boolean searchWord(String word, TreeNode root){
+        if(word.length() == 0 || !root.children.containsKey(word.charAt(0))) 
+            return false;
+        
+        if(word.length() == 1 && root.children.get(word.charAt(0)).isCompleteWord)
+            return true;
+        
+        return searchWord(word.substring(1), root.children.get(word.charAt(0)));
+    }
+    /** Returns if there is any word in the trie that starts with the given prefix. */
+    public boolean startsWith(String prefix) {
+        return searchPrefix(prefix, root);
+    }
+    
+    private boolean searchPrefix(String word, TreeNode root){
+        
+        if(word.length() == 0 || !root.children.containsKey(word.charAt(0))) 
+            return false;
+        
+        if(word.length() == 1)
+            return true;
+        
+        return searchPrefix(word.substring(1), root.children.get(word.charAt(0)));
+    }
+}
+
+/**
+ * Your Trie object will be instantiated and called as such:
+ * Trie obj = new Trie();
+ * obj.insert(word);
+ * boolean param_2 = obj.search(word);
+ * boolean param_3 = obj.startsWith(prefix);
+ */

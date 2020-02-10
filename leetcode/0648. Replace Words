@@ -1,0 +1,107 @@
+/*
+    648. Replace Words
+
+In English, we have a concept called root, which can be followed by some other words to form another longer word - let's call this word successor. For example, the root an, followed by other, which can form another word another.
+
+Now, given a dictionary consisting of many roots and a sentence. You need to replace all the successor in the sentence with the root forming it. If a successor has many roots can form it, replace it with the root with the shortest length.
+
+You need to output the sentence after the replacement.
+
+Example 1:
+
+Input: dict = ["cat", "bat", "rat"]
+sentence = "the cattle was rattled by the battery"
+Output: "the cat was rat by the bat"
+ 
+
+Note:
+
+The input will only have lower-case letters.
+1 <= dict words number <= 1000
+1 <= sentence words number <= 1000
+1 <= root length <= 100
+1 <= sentence words length <= 1000
+*/
+class TreeNode{
+    char val;
+    HashMap<Character, TreeNode> children;
+    boolean isCompleteWord;
+    public TreeNode(char val, boolean isCompleteWord){
+        this.val = val;
+        this.isCompleteWord = isCompleteWord;
+        children = new HashMap<Character, TreeNode>();
+    }
+}
+class Solution {
+    public String replaceWords(List<String> dict, String sentence) {
+        TreeNode root = buildTree(dict);
+        String[] allWords = sentence.split(" ");
+        StringBuilder result = new StringBuilder();
+        
+        for(int w = 0; w < allWords.length; w++){
+            String newWord = updateWord(allWords[w], root, "");
+            result.append(newWord);
+            if(w != allWords.length - 1)
+                result.append(" ");
+        }
+        return result.toString();
+    }
+    
+    private TreeNode buildTree(List<String> dict){
+        TreeNode root = new TreeNode('#', false);
+        for(String word: dict){
+            addToTree(word, root);
+        }
+        return root;
+    }
+    private void addToTree(String word, TreeNode root){
+        if(word.length() == 0)
+            return;
+        char current = word.charAt(0);
+        boolean isCompleteWord = word.length() == 1;
+        if(!root.children.containsKey(current)){
+            root.children.put(current, new TreeNode(current, isCompleteWord));
+        }else{
+            root.children.get(current).isCompleteWord = root.children.get(current).isCompleteWord || isCompleteWord; 
+        }
+        addToTree(word.substring(1), root.children.get(current));
+    }
+    
+    private String updateWord(String word, TreeNode root, String sofar){
+        if(word.length() == 0 || !root.children.containsKey(word.charAt(0)))
+            return sofar + word;
+        char current = word.charAt(0);
+        if(root.children.get(current).isCompleteWord)
+            return sofar + current;
+        return updateWord(word.substring(1), root.children.get(current), sofar + current);
+        
+    }
+}
+
+/*Non efficient O(n*m) Solution where n = number of words and m = length of largest word
+class Solution {
+    public String replaceWords(List<String> dict, String sentence) {
+        HashSet<String> myDict = new HashSet<String>(dict);
+        myDict.addAll(dict);
+        
+        String[] str = sentence.split(" ");
+        StringBuilder result = new StringBuilder();
+        for(int x = 0; x < str.length; x++){
+            String currentWord = replaceWord(str[x], myDict);
+            result.append(currentWord);
+            if(x != str.length - 1)
+                result.append(" ");
+        }
+        
+        return result.toString();
+    }
+    
+    private String replaceWord(String word, HashSet<String> dict){
+        for(int x = 0; x < word.length(); x++){
+            if(dict.contains(word.substring(0, x+1)))
+                return word.substring(0, x+1);
+        }
+        return word;
+    }
+}
+*/

@@ -1,0 +1,86 @@
+/*
+916. Word Subsets
+
+We are given two arrays A and B of words.  Each word is a string of lowercase letters.
+
+Now, say that word b is a subset of word a if every letter in b occurs in a, including multiplicity.  For example, "wrr" is a subset of "warrior", but is not a subset of "world".
+
+Now say a word a from A is universal if for every b in B, b is a subset of a. 
+
+Return a list of all universal words in A.  You can return the words in any order.
+
+ 
+
+Example 1:
+
+Input: A = ["amazon","apple","facebook","google","leetcode"], B = ["e","o"]
+Output: ["facebook","google","leetcode"]
+Example 2:
+
+Input: A = ["amazon","apple","facebook","google","leetcode"], B = ["l","e"]
+Output: ["apple","google","leetcode"]
+Example 3:
+
+Input: A = ["amazon","apple","facebook","google","leetcode"], B = ["e","oo"]
+Output: ["facebook","google"]
+Example 4:
+
+Input: A = ["amazon","apple","facebook","google","leetcode"], B = ["lo","eo"]
+Output: ["google","leetcode"]
+Example 5:
+
+Input: A = ["amazon","apple","facebook","google","leetcode"], B = ["ec","oc","ceo"]
+Output: ["facebook","leetcode"]
+ 
+
+Note:
+
+1 <= A.length, B.length <= 10000
+1 <= A[i].length, B[i].length <= 10
+A[i] and B[i] consist only of lowercase letters.
+All words in A[i] are unique: there isn't i != j with A[i] == A[j].
+*/
+class Solution {
+    public List<String> wordSubsets(String[] A, String[] B) {
+        List<String> result = new ArrayList<String>();
+        HashMap<Character, Integer> required = buildHashMapFromArray(B);
+        
+        for(int x = 0; x < A.length; x++){
+            HashMap<Character,Integer> current = getHashMapOfWord(A[x]);
+            if(isUniversal(current, required))
+                result.add(A[x]);
+        }
+        
+        return result;
+    }
+    
+    private HashMap<Character, Integer> buildHashMapFromArray(String[] arr){
+        HashMap<Character, Integer> result = new HashMap<Character, Integer>();
+        for(int x = 0; x < arr.length; x++){
+            HashMap<Character, Integer> current = getHashMapOfWord(arr[x]);
+            for(char key: current.keySet()){
+                if(!result.containsKey(key) || result.get(key) < current.get(key))
+                    result.put(key, current.get(key));
+            }
+        }
+        return result;
+    }
+    
+    private HashMap<Character, Integer> getHashMapOfWord(String str){
+        HashMap<Character, Integer> result = new HashMap<Character, Integer>();
+        for(int x = 0; x < str.length(); x++){
+            char ch = str.charAt(x);
+            int count = result.containsKey(ch) ? result.get(ch) + 1 : 1;
+            result.put(ch, count);
+        }
+        return result;
+    }
+    
+    private boolean isUniversal(HashMap<Character, Integer> current, HashMap<Character, Integer> required){
+        for(char key: required.keySet()){
+            if(!current.containsKey(key) || current.get(key) < required.get(key))
+                return false;
+        }
+        return true;
+    }
+}

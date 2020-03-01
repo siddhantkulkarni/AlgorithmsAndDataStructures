@@ -1,0 +1,88 @@
+/*
+1170. Compare Strings by Frequency of the Smallest Character
+
+Let's define a function f(s) over a non-empty string s, which calculates the frequency of the smallest character in s. For example, if s = "dcce" then f(s) = 2 because the smallest character is "c" and its frequency is 2.
+
+Now, given string arrays queries and words, return an integer array answer, where each answer[i] is the number of words such that f(queries[i]) < f(W), where W is a word in words.
+
+ 
+
+Example 1:
+
+Input: queries = ["cbd"], words = ["zaaaz"]
+Output: [1]
+Explanation: On the first query we have f("cbd") = 1, f("zaaaz") = 3 so f("cbd") < f("zaaaz").
+Example 2:
+
+Input: queries = ["bbb","cc"], words = ["a","aa","aaa","aaaa"]
+Output: [1,2]
+Explanation: On the first query only f("bbb") < f("aaaa"). On the second query both f("aaa") and f("aaaa") are both > f("cc").
+ 
+
+Constraints:
+
+1 <= queries.length <= 2000
+1 <= words.length <= 2000
+1 <= queries[i].length, words[i].length <= 10
+queries[i][j], words[i][j] are English lowercase letters.
+*/
+class Solution {
+    public int[] numSmallerByFrequency(String[] queries, String[] words) {
+        int[] qFreq = new int[queries.length];
+        int[] wFreq = new int[words.length];
+        calculateFrequencyArray(queries, qFreq);
+        calculateFrequencyArray(words, wFreq);
+        
+        int maxFreqOfWords = getMax(wFreq);
+        int[] countWordFreq = new int[maxFreqOfWords + 1];
+        getCountSortArr(wFreq, countWordFreq);
+        
+        int[] higherThan = new int[countWordFreq.length];
+        getHigherThan(countWordFreq, higherThan);
+        
+        int[] result = new int[queries.length];
+        for(int x = 0; x < queries.length; x++){
+            result[x] = qFreq[x] < higherThan.length ? higherThan[qFreq[x]] : 0;
+        }
+        
+        return result;
+    }
+    
+    private void calculateFrequencyArray(String[] words, int[] freq){
+        for(int x = 0; x < words.length; x++){
+            freq[x] = getFrequency(words[x]);
+        }
+    }
+    
+    private int getFrequency(String str){
+        char smallest = 256;
+        HashMap<Character, Integer> counts = new HashMap<Character, Integer>();
+        for(int x = 0; x < str.length(); x++){
+            char current = str.charAt(x);
+            if(current < smallest) smallest = current;
+            int countOfCurrent = counts.getOrDefault(current, 0);
+            counts.put(current, countOfCurrent + 1);
+        }
+        return counts.get(smallest);
+    }
+    
+    private int getMax(int[] arr){
+        int max = Integer.MIN_VALUE;
+        for(int x: arr){
+            max = Math.max(max, x);
+        }
+        return max;
+    }
+    
+    private void getCountSortArr(int[] arr, int[] counts){
+        for(int x: arr)counts[x]++;
+    }
+    
+    private void getHigherThan(int[] counts, int[] result){
+        int sum = 0;
+        for(int x = counts.length - 1; x >= 0; x--){
+            result[x] = sum;
+            sum += counts[x];
+        }
+    }
+}

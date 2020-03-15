@@ -1,0 +1,79 @@
+/*
+347. Top K Frequent Elements
+
+Given a non-empty array of integers, return the k most frequent elements.
+
+Example 1:
+
+Input: nums = [1,1,1,2,2,3], k = 2
+Output: [1,2]
+Example 2:
+
+Input: nums = [1], k = 1
+Output: [1]
+Note:
+
+You may assume k is always valid, 1 ≤ k ≤ number of unique elements.
+Your algorithm's time complexity must be better than O(n log n), where n is the array's size.
+*/
+class Solution {
+    public List<Integer> topKFrequent(int[] nums, int k) {
+        HashMap<Integer, Integer> valuesToCounts = new HashMap<Integer, Integer>();
+        TreeMap<Integer, HashSet<Integer>> countsToValues = new TreeMap<Integer, HashSet<Integer>>();
+        
+        buildMaps(nums, valuesToCounts, countsToValues);
+        
+        List<Integer> result = new ArrayList<Integer>();
+        populateTopKFrequent(result, countsToValues, k);
+        
+        return result;
+    }
+    
+    private void buildMaps(int[] nums, HashMap<Integer, Integer> valuesToCounts, TreeMap<Integer, HashSet<Integer>> countsToValues){
+        for(int x = 0; x < nums.length; x++){
+            HashSet<Integer> toAdd;
+            if(valuesToCounts.containsKey(nums[x])){
+                int prevCount = valuesToCounts.get(nums[x]);
+                HashSet<Integer> prevList = countsToValues.get(prevCount);
+                
+                prevList.remove(nums[x]);
+                if(prevList.size() == 0)
+                    countsToValues.remove(prevCount);
+                else
+                    countsToValues.put(prevCount, prevList);
+                
+                int newCount = prevCount + 1;
+                toAdd = countsToValues.containsKey(newCount) ? countsToValues.get(newCount) : new HashSet<Integer>();
+                toAdd.add(nums[x]);
+                countsToValues.put(newCount, toAdd);
+                valuesToCounts.put(nums[x], newCount);
+                
+            }else{
+                valuesToCounts.put(nums[x], 1);
+                toAdd = countsToValues.containsKey(1) ? countsToValues.get(1) : new HashSet<Integer>();
+                toAdd.add(nums[x]);
+                countsToValues.put(1, toAdd);
+            }
+        }
+    }
+    
+    private void populateTopKFrequent(List<Integer> result, TreeMap<Integer, HashSet<Integer>> countsToValues, int k){
+        Integer[] keys = (Integer[])countsToValues.keySet().toArray(new Integer[0]);
+        int currentKey = keys.length - 1;
+        while(currentKey >= 0 && result.size() < k){
+            HashSet<Integer> currentList = countsToValues.get(keys[currentKey--]);
+            if(k - result.size() > currentList.size())
+                result.addAll(currentList);
+            else{
+                int remaining = k - result.size();
+                for(int value: currentList){
+                    if(remaining == 0)
+                        break;
+                    result.add(value);
+                    remaining--;
+                }
+            }
+    
+        }
+    }
+}

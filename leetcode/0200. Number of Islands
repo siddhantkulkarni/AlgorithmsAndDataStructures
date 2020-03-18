@@ -1,0 +1,54 @@
+/*
+200. Number of Islands
+
+Given a 2d grid map of '1's (land) and '0's (water), count the number of islands. An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.
+
+Example 1:
+
+Input:
+11110
+11010
+11000
+00000
+
+Output: 1
+Example 2:
+
+Input:
+11000
+11000
+00100
+00011
+
+Output: 3
+*/
+class Solution {
+    public int numIslands(char[][] grid) {
+        if(grid.length == 0) return 0;
+        boolean[][] visited = new boolean[grid.length][grid[0].length];
+        int numOfIslands = 0;
+        for(int x = 0; x < grid.length; x++){
+            for(int y = 0; y < grid[x].length; y++){
+                if(!visited[x][y] && grid[x][y] == '1'){
+                    numOfIslands++;
+                    exploreIsland(x, y, grid, visited);
+                }
+            }
+        }
+        return numOfIslands;
+    }
+    
+    private void exploreIsland(int x, int y, char[][] grid, boolean[][] visited){
+        if(x < 0 || y < 0 || x >= grid.length || y >= grid[0].length)
+            return;
+        if(visited[x][y] || grid[x][y] == '0') return;
+        if(grid[x][y] == '1')
+            visited[x][y] = true;
+        
+        
+        exploreIsland(x - 1, y, grid, visited);
+        exploreIsland(x + 1, y, grid, visited);
+        exploreIsland(x, y - 1, grid, visited);
+        exploreIsland(x, y + 1, grid, visited);
+    }
+}

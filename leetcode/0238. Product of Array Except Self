@@ -1,0 +1,46 @@
+/*
+238. Product of Array Except Self
+
+Given an array nums of n integers where n > 1,  return an array output such that output[i] is equal to the product of all the elements of nums except nums[i].
+
+Example:
+
+Input:  [1,2,3,4]
+Output: [24,12,8,6]
+Constraint: It's guaranteed that the product of the elements of any prefix or suffix of the array (including the whole array) fits in a 32 bit integer.
+
+Note: Please solve it without division and in O(n).
+
+Follow up:
+Could you solve it with constant space complexity? (The output array does not count as extra space for the purpose of space complexity analysis.)
+*/
+class Solution {
+    public int[] productExceptSelf(int[] nums) {
+        int[] result = new int[nums.length];
+        int zeros = 0, ones = 0, others = 0;
+        int total = 1;
+        for(int num: nums){
+            if(num == 0) zeros++;
+            else if(num == 1) ones++;
+            else total = total * num;
+        }
+        
+        if(zeros > 1){
+            Arrays.fill(result, 0);
+            return result;
+        }
+        
+        for(int x = 0; x < nums.length; x++){
+            if(zeros > 0){
+                if(nums[x] == 0)
+                    result[x] = total;
+                else
+                    result[x] = 0;
+            }
+            else{
+                result[x] = total/nums[x];
+            }
+        }
+        return result;
+    }
+}

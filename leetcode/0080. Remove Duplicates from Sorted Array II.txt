@@ -75,5 +75,26 @@ class Solution:
                 length += 1
         return length
         '''
-        
+        //JAVA O(n) solution in O(1) memory
+        class Solution {
+    public int removeDuplicates(int[] nums) {
+        int locPtr = 0, savePtr = 0;
+        while(locPtr < nums.length){
+            if(locPtr == nums.length - 1){
+                nums[savePtr++] = nums[locPtr++];
+            }
+            else if(nums[locPtr] == nums[locPtr + 1]){
+                nums[savePtr] = nums[locPtr];
+                nums[savePtr + 1] = nums[locPtr];
+                savePtr = savePtr + 2;
+                int prev = nums[locPtr];
+                while(locPtr < nums.length && nums[locPtr] == prev)
+                    locPtr++;
+            }else{
+                nums[savePtr++] = nums[locPtr++];
+            }
+        }
+        return savePtr;
+    }
+}
         

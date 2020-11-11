@@ -1,0 +1,60 @@
+/**
+82. Remove Duplicates from Sorted List II
+
+Given a sorted linked list, delete all nodes that have duplicate numbers, leaving only distinct numbers from the original list.
+
+Return the linked list sorted as well.
+
+Example 1:
+
+Input: 1->2->3->3->4->4->5
+Output: 1->2->5
+Example 2:
+
+Input: 1->1->1->2->3
+Output: 2->3
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode deleteDuplicates(ListNode head) {
+        if(head == null)
+            return head;
+        
+        HashSet<Integer> needToRemove = new HashSet<Integer>();
+        ListNode temp = head;
+        
+        while(temp.next != null){
+            if(temp.next.val == temp.val){
+                temp.next = temp.next.next;
+                needToRemove.add(temp.val);
+            }else{
+                temp = temp.next;
+            }
+        }
+        
+        while(head != null && needToRemove.contains(head.val))
+            head = head.next;
+        
+        if(head == null)
+            return head;
+        
+        temp = head;
+        
+        while(temp.next != null){
+            if(needToRemove.contains(temp.next.val)){
+                temp.next = temp.next.next;
+            }else{
+                temp = temp.next;
+            }
+        }
+        
+        return head;
+    }
+}

@@ -1,0 +1,109 @@
+/**
+445. Add Two Numbers II
+
+You are given two non-empty linked lists representing two non-negative integers. The most significant digit comes first and each of their nodes contain a single digit. Add the two numbers and return it as a linked list.
+
+You may assume the two numbers do not contain any leading zero, except the number 0 itself.
+
+Follow up:
+What if you cannot modify the input lists? In other words, reversing the lists is not allowed.
+
+Example:
+
+Input: (7 -> 2 -> 4 -> 3) + (5 -> 6 -> 4)
+Output: 7 -> 8 -> 0 -> 7
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class SolutionToReversedList {
+    ListNode rhead = null, rtail = null;
+    int carry = 0;
+    
+    private void addToResult(ListNode temp){
+        if(temp.val > 9){
+            carry = 1;
+            temp.val -= 10;
+        }else{
+            carry = 0;
+        }
+        
+        if(rhead == null){
+            rhead = temp;
+            rtail = temp;
+        }
+        else{
+            rtail.next = temp;
+            rtail = rtail.next;
+        }
+        
+    }
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode fptr = l1, sptr = l2;
+        while(fptr!= null && sptr != null){
+            addToResult(new ListNode(carry + fptr.val + sptr.val));
+            fptr = fptr.next;
+            sptr = sptr.next;
+        }
+        
+        while(fptr != null){
+            addToResult(new ListNode(carry + fptr.val));
+            fptr = fptr.next;
+        }
+        
+        while(sptr != null){
+            addToResult(new ListNode(carry + sptr.val));
+            sptr = sptr.next;
+        }
+        
+        if(carry != 0){
+            addToResult(new ListNode(carry));
+        }
+        return rhead;
+    }
+}
+
+class Solution {
+    private ListNode reverseList(ListNode head){
+       Stack<ListNode> stack = new Stack<ListNode>();
+        while(head != null){
+            stack.push(head);
+            head = head.next;
+        }
+        ListNode rhead = null, rtail = null;
+        while(!stack.isEmpty()){
+            ListNode temp = stack.pop();
+            temp.next = null;
+            if(rhead == null){
+                rhead = temp;
+                rtail = temp;
+            }else{
+                rtail.next = temp;
+                rtail = rtail.next;
+            }
+        }
+        return rhead;
+    }    
+    
+    private void printList(ListNode head){
+        System.out.println("");
+        ListNode temp = head;
+        while(temp != null){
+            System.out.print(temp.val + "->");
+            temp = temp.next;
+        }
+        System.out.println("");
+    }
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        l1 = reverseList(l1);
+        l2 = reverseList(l2);
+        SolutionToReversedList sr = new SolutionToReversedList();
+        
+        return reverseList(sr.addTwoNumbers(l1, l2));
+    }
+}

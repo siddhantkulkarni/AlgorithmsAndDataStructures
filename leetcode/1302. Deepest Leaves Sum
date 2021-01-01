@@ -1,0 +1,32 @@
+/**
+1302. Deepest Leaves Sum
+Given a binary tree, return the sum of values of its deepest leaves.
+ 
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public int deepestLeavesSum(TreeNode root) {
+        Map<Integer, Integer> levelSums = new HashMap<Integer, Integer>();
+        return levelSums.getOrDefault(traverse(root, levelSums, 1), 0);
+    }
+    
+    private int traverse(TreeNode root, Map<Integer, Integer> levelSums, int current){
+        if(root == null)
+            return current - 1;
+        levelSums.put(current, levelSums.getOrDefault(current, 0) + root.val);
+        return Math.max(current, Math.max(traverse(root.left, levelSums, current + 1), traverse(root.right, levelSums, current + 1)));
+        
+    }
+}

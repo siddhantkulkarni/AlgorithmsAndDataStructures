@@ -1,0 +1,87 @@
+/*
+738. Monotone Increasing Digits
+
+Given a non-negative integer N, find the largest number that is less than or equal to N with monotone increasing digits.
+
+(Recall that an integer has monotone increasing digits if and only if each pair of adjacent digits x and y satisfy x <= y.)
+
+Example 1:
+Input: N = 10
+Output: 9
+Example 2:
+Input: N = 1234
+Output: 1234
+Example 3:
+Input: N = 332
+Output: 299
+Note: N is an integer in the range [0, 10^9].
+*/
+class Solution {
+    public int monotoneIncreasingDigits(int N) {
+        if(N < 10)
+            return N;
+        if(N == 10)
+            return 9;
+        if(isMonotone(N))
+            return N;
+        return generateMonotone(N);
+    }
+    private boolean isMonotone(int N){
+        String number = Integer.toString(N);
+        
+        for(int x = 0; x < number.length() - 1; x++){
+            int current = Character.getNumericValue(number.charAt(x));
+            int next = Character.getNumericValue(number.charAt(x + 1));
+            if(current > next)
+                return false;
+            
+        }
+        return true;
+        
+        
+    }
+    
+    private int generateMonotone(int N){
+        StringBuilder result = new StringBuilder();
+        int[] num = getArrayFromInt(N);
+        int a = 0, b = 1;
+        while(b < num.length){
+            int curr = num[a];
+            int next = num[b];
+            if(curr == next){
+                b++;
+            }else if(curr < next){
+                a = b;
+                b++;
+            }else{
+                break;
+            }
+        }
+        num[a]--;
+        a++;
+        
+        while(a < num.length)
+            num[a++] = 9;
+        
+        return getIntFromArr(num);
+    }
+    
+    private int[] getArrayFromInt(int N){
+        String num = Integer.toString(N);
+        int[] result = new int[num.length()];
+        for(int x = 0; x < num.length(); x++){
+            result[x] = Character.getNumericValue(num.charAt(x));
+        }
+        return result;
+        
+    }
+    
+    private int getIntFromArr(int[] num){
+        int result = num[0];
+        for(int x = 1; x < num.length; x++){
+            result = (result * 10) + num[x];
+        }
+        return result;
+        
+    }
+}

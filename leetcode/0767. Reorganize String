@@ -1,0 +1,80 @@
+/*
+767. Reorganize String
+
+Given a string S, check if the letters can be rearranged so that two characters that are adjacent to each other are not the same.
+
+If possible, output any possible result.  If not possible, return the empty string.
+
+Example 1:
+
+Input: S = "aab"
+Output: "aba"
+Example 2:
+
+Input: S = "aaab"
+Output: ""
+Note:
+
+S will consist of lowercase letters and have length in range [1, 500].
+*/
+class Letter implements Comparable<Letter>{
+    char ch;
+    int count;
+    
+    public Letter(char ch, int count){
+        this.ch = ch;
+        this.count = count;
+    }
+    
+    public int compareTo(Letter next){
+        return this.count == next.count ? next.ch - this.ch : next.count - this.count;
+    }
+}
+class Solution {
+    public String reorganizeString(String S) {
+        PriorityQueue<Letter> queue = getQueue(S);
+        StringBuilder result = new StringBuilder();
+        while(queue.size() > 1){
+            Letter first = queue.poll();
+            Letter second = queue.poll();
+            while(first.count > 0 && second.count > 0){
+                result.append(first.ch);
+                result.append(second.ch);
+                first.count--;
+                second.count--;
+            }
+            if(first.count > 0)
+                queue.add(first);
+            if(second.count > 0)
+                queue.add(second);
+        }
+        
+        if(queue.size() == 1){
+            Letter last = queue.poll();
+            if(last.count > 1)
+                return "";
+            if(last.ch == result.charAt(result.length() - 1))
+                return "";
+            result.append(last.ch);
+        }
+        return result.toString();
+    }
+    
+    private PriorityQueue<Letter> getQueue(String str){
+        HashMap<Character, Integer> map = getMap(str);
+        PriorityQueue<Letter> result = new PriorityQueue<Letter>();
+        for(char key: map.keySet()){
+            result.add(new Letter(key, map.get(key)));
+        }
+        return result;
+    }
+    
+    private HashMap<Character, Integer> getMap(String str){
+        HashMap<Character, Integer> map = new HashMap<Character, Integer>();
+        for(int x = 0; x < str.length(); x++){
+            char ch = str.charAt(x);
+            map.put(ch, map.getOrDefault(ch, 0) + 1);
+        }
+        return map;
+    }
+}

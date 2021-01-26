@@ -1,0 +1,79 @@
+/*
+1007. Minimum Domino Rotations For Equal Row
+
+In a row of dominoes, A[i] and B[i] represent the top and bottom halves of the ith domino.  (A domino is a tile with two numbers from 1 to 6 - one on each half of the tile.)
+
+We may rotate the ith domino, so that A[i] and B[i] swap values.
+
+Return the minimum number of rotations so that all the values in A are the same, or all the values in B are the same.
+
+If it cannot be done, return -1.
+
+ 
+
+Example 1:
+
+
+Input: A = [2,1,2,4,2,2], B = [5,2,6,2,3,2]
+Output: 2
+Explanation: 
+The first figure represents the dominoes as given by A and B: before we do any rotations.
+If we rotate the second and fourth dominoes, we can make every value in the top row equal to 2, as indicated by the second figure.
+Example 2:
+
+Input: A = [3,5,1,2,3], B = [3,6,3,3,4]
+Output: -1
+Explanation: 
+In this case, it is not possible to rotate the dominoes to make one row of values equal.
+ 
+
+Constraints:
+
+2 <= A.length == B.length <= 2 * 104
+1 <= A[i], B[i] <= 6
+*/
+class Solution {
+    public int minDominoRotations(int[] A, int[] B) {
+        int[] maxCountValA = getMaxCountVal(A);
+        int[] maxCountValB = getMaxCountVal(B);
+        int equalVal = 0;
+        int[] makeEqual = null, other = null;
+        if(maxCountValA[0] > maxCountValB[0]){
+            equalVal = maxCountValA[1];
+            makeEqual = A;
+            other = B;
+        }else{
+            equalVal = maxCountValB[1];
+            makeEqual = B;
+            other = A;
+        }
+        
+        int count = 0;
+        for(int x = 0; x < makeEqual.length; x++){
+            if(makeEqual[x] == equalVal)
+                continue;
+            else if(other[x] != equalVal)
+                return -1;
+            count++;
+        }
+        
+        return count;
+    }
+    
+    private int[] getMaxCountVal(int[] arr){
+        int[] die = new int[7];
+        for(int x = 0; x < arr.length; x++){
+            die[arr[x]]++;
+        }
+        
+        int[] maxCountVal = new int[2];
+        maxCountVal[0] = Integer.MIN_VALUE;
+        for(int x = 1; x < die.length; x++){
+            if(die[x] > maxCountVal[0]){
+                maxCountVal[0] = die[x];
+                maxCountVal[1] = x;
+            }
+        }
+        return maxCountVal;
+    }
+}

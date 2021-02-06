@@ -1,0 +1,66 @@
+/*
+79. Word Search
+
+Given an m x n board and a word, find if the word exists in the grid.
+
+The word can be constructed from letters of sequentially adjacent cells, where "adjacent" cells are horizontally or vertically neighboring. The same letter cell may not be used more than once.
+
+ 
+
+Example 1:
+
+
+Input: board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "ABCCED"
+Output: true
+Example 2:
+
+
+Input: board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "SEE"
+Output: true
+Example 3:
+
+
+Input: board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "ABCB"
+Output: false
+ 
+
+Constraints:
+
+m == board.length
+n = board[i].length
+1 <= m, n <= 200
+1 <= word.length <= 103
+board and word consists only of lowercase and uppercase English letters.
+
+*/
+class Solution {
+    public boolean exist(char[][] board, String word) {
+        boolean[][] visited = new boolean[board.length][board[0].length];
+        for(int r = 0; r < board.length; r++){
+            for(int c = 0; c < board[r].length; c++){
+                    if(canFormWord(board, word, r, c, visited))
+                        return true;  
+            }
+        }
+        return false;
+    }
+        
+    private boolean canFormWord(char[][] board, String word, int row, int col, boolean[][] visited){
+        if(row < 0 || row > board.length - 1 || col < 0 || col > board[0].length - 1)
+            return false;
+        if(visited[row][col] || board[row][col] != word.charAt(0))
+            return false;
+        if(word.length() == 1)
+            return true;
+        String remaining = word.substring(1);
+        visited[row][col] = true;
+        if(canFormWord(board, remaining, row + 1, col, visited) ||
+        canFormWord(board, remaining, row, col + 1, visited) ||
+        canFormWord(board, remaining, row - 1, col, visited) ||
+        canFormWord(board, remaining, row, col - 1, visited))
+            return true;
+        visited[row][col] = false;
+        return false;
+    }
+    
+}

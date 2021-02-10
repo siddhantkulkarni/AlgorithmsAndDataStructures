@@ -1,0 +1,82 @@
+/**105. Construct Binary Tree from Preorder and Inorder Traversal
+
+Given preorder and inorder traversal of a tree, construct the binary tree.
+
+Note:
+You may assume that duplicates do not exist in the tree.
+
+For example, given
+
+preorder = [3,9,20,15,7]
+inorder = [9,3,15,20,7]
+Return the following binary tree:
+
+    3
+   / \
+  9  20
+    /  \
+   15   7
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ 
+
+[3,9,1,2,20,15,7]
+[1,9,2,3,15,20,7]
+
+        3
+       /  \
+      9     20
+     / \    / \
+    1   2  15  7
+*/
+class Solution {
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        if(preorder.length == 0)
+            return null;
+        HashMap<Integer, Integer> inorderMap = getMap(inorder);
+        TreeNode root = new TreeNode(preorder[0]);
+        for(int x = 1; x < preorder.length; x++){
+            insert(preorder[x], inorderMap, root);
+        }
+        return root;
+    }
+    
+    private HashMap<Integer, Integer> getMap(int[] arr){
+        HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+        for(int x = 0; x < arr.length; x++){
+            map.put(arr[x], x);
+        }
+        return map;
+    }
+    private void insert(int val, HashMap<Integer, Integer> inorder, TreeNode root){
+        if(isLeftOfRoot(val, inorder, root)){
+            if(root.left == null){
+                root.left = new TreeNode(val);
+            }else{
+                insert(val, inorder, root.left);
+            }    
+        }else{
+            if(root.right == null){
+                root.right = new TreeNode(val);
+            }else{
+                insert(val, inorder, root.right);
+            }
+        }
+    }
+    
+    private boolean isLeftOfRoot(int val, HashMap<Integer, Integer> inorder, TreeNode root){
+        return inorder.get(val) < inorder.get(root.val);
+    }
+    
+}

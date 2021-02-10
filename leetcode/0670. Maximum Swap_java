@@ -1,0 +1,74 @@
+/*
+670. Maximum Swap
+
+Given a non-negative integer, you could swap two digits at most once to get the maximum valued number. Return the maximum valued number you could get.
+
+Example 1:
+Input: 2736
+Output: 7236
+Explanation: Swap the number 2 and the number 7.
+Example 2:
+Input: 9973
+Output: 9973
+Explanation: No swap.
+Note:
+The given number is in the range [0, 108]
+*/
+class NumObject{
+    int val;
+    int ind;
+    public NumObject(int val, int ind){
+        this.val = val;
+        this.ind = ind;
+    }
+}
+
+class Solution {
+    public int maximumSwap(int num) {
+        int[] arr = numToArr(num);
+        NumObject[] maxFromRight = buildMaxFromRight(arr);
+        for(int x = 0; x < arr.length; x++){
+            NumObject max = maxFromRight[x];
+            if(max.val > arr[x]){
+                arr[max.ind] = arr[x];
+                arr[x] = max.val;
+                break;
+            }
+        }
+        return arrToNum(arr);
+    }
+    
+    private NumObject[] buildMaxFromRight(int[] arr){
+        NumObject[] result = new NumObject[arr.length];
+        NumObject max = new NumObject(Integer.MIN_VALUE, -1);
+        for(int x = arr.length - 1; x >= 0; x--){
+            if(max.val < arr[x]){
+                result[x] = new NumObject(arr[x],x);
+                max = result[x];
+            }else{
+                result[x] = max;
+            }
+        }
+        return result;
+    }    
+    private int[] numToArr(int num){
+        int length = Integer.toString(num).length();
+        int[] result = new int[length];
+        
+        for(int x = 0; x < length; x++){
+            result[(length - x) - 1] = num % 10;
+            num /= 10;
+        }
+        
+        return result;
+    }
+    
+    private int arrToNum(int[] arr){
+        int result = 0;
+        for(int x = 0; x < arr.length; x++){
+            result = (result * 10) + arr[x];
+        }
+        return result;
+    }
+    
+}

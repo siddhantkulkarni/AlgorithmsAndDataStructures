@@ -1,0 +1,42 @@
+/*
+41. First Missing Positive
+
+Given an unsorted integer array nums, find the smallest missing positive integer.
+
+ 
+
+Example 1:
+
+Input: nums = [1,2,0]
+Output: 3
+Example 2:
+
+Input: nums = [3,4,-1,1]
+Output: 2
+Example 3:
+
+Input: nums = [7,8,9,11,12]
+Output: 1
+*/
+class Solution {
+    public int firstMissingPositive(int[] nums) {
+        if(nums.length == 0)
+            return 1;
+        
+        Arrays.sort(nums);
+        int ptr = 0;
+        while(ptr < nums.length && nums[ptr] <= 0)
+            ptr++;
+        
+        if(ptr == nums.length || nums[ptr] > 1)
+            return 1;
+        ptr++;
+        while(ptr < nums.length){
+            if(nums[ptr] - 1 > nums[ptr - 1])
+                return nums[ptr - 1] + 1;
+            ptr++;
+        }
+        
+        return nums[nums.length - 1] + 1;
+    }
+}

@@ -1,0 +1,56 @@
+/*
+792. Number of Matching Subsequences
+
+Given string S and a dictionary of words words, find the number of words[i] that is a subsequence of S.
+
+Example :
+Input: 
+S = "abcde"
+words = ["a", "bb", "acd", "ace"]
+Output: 3
+Explanation: There are three words in words that are a subsequence of S: "a", "acd", "ace".
+Note:
+
+All words in words and S will only consists of lowercase letters.
+The length of S will be in the range of [1, 50000].
+The length of words will be in the range of [1, 5000].
+The length of words[i] will be in the range of [1, 50].
+*/
+class Solution {
+    public int numMatchingSubseq(String S, String[] words) {
+        HashMap<Character, ArrayList<Integer>> map = getMapCharIndices(S);
+        int prevIndex = -1, result = 0;
+        for(String word: words){
+            if(existsAsSubseq(word, map, -1))
+                result++;
+        }
+        return result;
+    }
+    
+    private HashMap<Character, ArrayList<Integer>> getMapCharIndices(String S){
+        HashMap<Character, ArrayList<Integer>> map = new HashMap<Character, ArrayList<Integer>>();
+        for(int x = 0; x < S.length(); x++){
+            char current = S.charAt(x);
+            ArrayList<Integer> positions = map.getOrDefault(current, new ArrayList<Integer>());
+            positions.add(x);
+            map.put(current, positions);
+        }
+        return map;
+    }
+    
+    private boolean existsAsSubseq(String word, HashMap<Character, ArrayList<Integer>> map, int prevIndex){
+        if(word.length() == 0)
+            return true;
+        char current = word.charAt(0);
+        if(!map.containsKey(current))
+            return false;
+        ArrayList<Integer> positions = map.get(current);
+        for(int p : positions){
+            if(p > prevIndex && existsAsSubseq(word.substring(1), map, p))
+                return true;
+            else if(p > prevIndex)
+                return false;
+        }
+        return false;
+    }
+}

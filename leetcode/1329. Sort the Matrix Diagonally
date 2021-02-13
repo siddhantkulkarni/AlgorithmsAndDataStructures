@@ -19,7 +19,7 @@ m == mat.length
 n == mat[i].length
 1 <= m, n <= 100
 1 <= mat[i][j] <= 100
-*/
+//SOLUTION 1
 class Solution {
     public int[][] diagonalSort(int[][] mat) {
         ArrayList<ArrayList<Integer>> diagonals = new ArrayList();
@@ -61,5 +61,60 @@ class Solution {
         }
         return mat;
         
+    }
+}
+*/
+
+//SOLUTION 2
+class Solution {
+    public int[][] diagonalSort(int[][] mat) {
+        int ROWS = mat.length;
+        if(ROWS == 0)
+            return mat;
+        int COLS = mat[0].length;
+        
+        ArrayList<ArrayList<Integer>> diagonals = getSortedDiagonals(mat, ROWS, COLS);
+        
+        return getMatrixWithDiagonalsPopulated(diagonals, ROWS, COLS);
+    }
+    
+    private ArrayList<ArrayList<Integer>> getSortedDiagonals(int[][] mat,int ROWS, int COLS){
+        boolean[][] visited = new boolean[ROWS][COLS];
+        ArrayList<ArrayList<Integer>> result = new ArrayList<ArrayList<Integer>>();
+        for(int c = 0; c < COLS; c++){
+            for(int r = ROWS - 1; r >= 0; r--){
+                if(!visited[r][c]){
+                    ArrayList<Integer> current = new ArrayList<Integer>();
+                    int dr = r, dc = c;
+                    while(dr < ROWS && dc < COLS){
+                        visited[dr][dc] = true;
+                        current.add(mat[dr++][dc++]);
+                    }
+                    Collections.sort(current);
+                    result.add(current);
+                }
+            }
+        }
+        return result;
+    }
+
+    private int[][] getMatrixWithDiagonalsPopulated(ArrayList<ArrayList<Integer>> diagonals, int ROWS, int COLS){
+       boolean[][] visited = new boolean[ROWS][COLS];
+        int[][] result = new int[ROWS][COLS];
+        int diagPointer = 0;
+        for(int c = 0; c < COLS; c++){
+            for(int r = ROWS - 1; r >= 0; r--){
+                if(!visited[r][c]){
+                    ArrayList<Integer> current = diagonals.get(diagPointer++);
+                    int ptr = 0;
+                    int dr = r, dc = c;
+                    while(dr < ROWS && dc < COLS){
+                        visited[dr][dc] = true;
+                        result[dr++][dc++] = current.get(ptr++);
+                    }
+                }
+            }
+        }
+        return result;
     }
 }

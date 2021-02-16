@@ -39,3 +39,20 @@ class Solution {
         return result.reverse().toString();
     }
 }
+/*ALTERNATE APPROACH
+class Solution {
+    public String licenseKeyFormatting(String S, int K) {
+        String key = S.replaceAll("-","").toUpperCase();
+        int remainder = key.length() % K;
+        StringBuilder newKey = new StringBuilder();
+        newKey.append(key.substring(0, remainder));
+        for(int x = remainder; x < key.length(); x+=K){
+            if(x != 0)
+                newKey.append("-");
+            newKey.append(key.substring(x, x+K));
+            
+        }
+        return newKey.toString();
+    }
+}
+*/

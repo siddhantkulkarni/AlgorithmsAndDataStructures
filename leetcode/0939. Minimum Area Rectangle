@@ -1,0 +1,56 @@
+/*
+939. Minimum Area Rectangle
+
+Given a set of points in the xy-plane, determine the minimum area of a rectangle formed from these points, with sides parallel to the x and y axes.
+
+If there isn't any rectangle, return 0.
+
+ 
+
+Example 1:
+
+Input: [[1,1],[1,3],[3,1],[3,3],[2,2]]
+Output: 4
+Example 2:
+
+Input: [[1,1],[1,3],[3,1],[3,3],[4,1],[4,3]]
+Output: 2
+ 
+
+Note:
+
+1 <= points.length <= 500
+0 <= points[i][0] <= 40000
+0 <= points[i][1] <= 40000
+All points are distinct.
+
+*/
+class Solution {
+    public int minAreaRect(int[][] points) {
+        TreeMap<Integer, ArrayList<Integer>> rows = new TreeMap<>();
+        for(int[] point: points){
+            ArrayList<Integer> temp = rows.getOrDefault(point[0], new ArrayList<Integer>());
+            temp.add(point[1]);
+            rows.put(point[0], temp);
+        }
+        
+        int min = Integer.MAX_VALUE;
+        HashMap<String, Integer> lastRowWithYs = new HashMap<>();
+        for(int row: rows.keySet()){
+            ArrayList<Integer> currentRow = rows.get(row);
+            Collections.sort(currentRow);
+            for(int a = 0; a < currentRow.size(); a++){
+                for(int b = a + 1; b < currentRow.size(); b++){
+                    int y1 = currentRow.get(a), y2 = currentRow.get(b);
+                    if(lastRowWithYs.containsKey(y1 + "|" + y2)){
+                        min = Math.min(min, (row - lastRowWithYs.get(y1+"|"+y2))*(y2-y1));
+                    }
+                    lastRowWithYs.put(y1+"|"+y2, row);
+                }
+            }
+        }
+
+        return min < Integer.MAX_VALUE ? min : 0;
+        
+    }
+}

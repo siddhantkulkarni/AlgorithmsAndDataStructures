@@ -1,0 +1,90 @@
+/*
+809. Expressive Words
+
+Sometimes people repeat letters to represent extra feeling, such as "hello" -> "heeellooo", "hi" -> "hiiii".  In these strings like "heeellooo", we have groups of adjacent letters that are all the same:  "h", "eee", "ll", "ooo".
+
+For some given string S, a query word is stretchy if it can be made to be equal to S by any number of applications of the following extension operation: choose a group consisting of characters c, and add some number of characters c to the group so that the size of the group is 3 or more.
+
+For example, starting with "hello", we could do an extension on the group "o" to get "hellooo", but we cannot get "helloo" since the group "oo" has size less than 3.  Also, we could do another extension like "ll" -> "lllll" to get "helllllooo".  If S = "helllllooo", then the query word "hello" would be stretchy because of these two extension operations: query = "hello" -> "hellooo" -> "helllllooo" = S.
+
+Given a list of query words, return the number of words that are stretchy. 
+
+ 
+
+Example:
+Input: 
+S = "heeellooo"
+words = ["hello", "hi", "helo"]
+Output: 1
+Explanation: 
+We can extend "e" and "o" in the word "hello" to get "heeellooo".
+We can't extend "helo" to get "heeellooo" because the group "ll" is not size 3 or more.
+ 
+
+Constraints:
+
+0 <= len(S) <= 100.
+0 <= len(words) <= 100.
+0 <= len(words[i]) <= 100.
+S and all words in words consist only of lowercase letters
+*/
+class CharCount{
+    char ch;
+    int count;
+    
+    public CharCount(char ch, int count){
+        this.ch = ch;
+        this.count = count;
+    }
+}
+class Solution {
+    public int expressiveWords(String S, String[] words) {
+        int count = 0;
+        ArrayList<CharCount> larger = getCharCount(S);
+        for(String word: words){
+            if(isExpressive(word, larger, S.length()))
+                count++;
+        }
+        return count;
+    }
+    
+    private boolean isExpressive(String small, ArrayList<CharCount> larger, int len){
+        if(small.length() > len)
+            return false;
+        ArrayList<CharCount> smaller = getCharCount(small);
+        if(smaller.size() != larger.size())
+            return false;
+        int a = 0, b = 0;
+        while(b < larger.size()){
+            CharCount s = smaller.get(a++);
+            CharCount l = larger.get(b++);
+            if(s.ch != l.ch)
+                return false;
+            if(l.count < s.count)
+                return false;
+            if(l.count >=3){
+                continue;  
+            }else{
+                if(l.count != s.count)
+                    return false;
+            }
+        }
+        return true;
+    }
+    
+    private ArrayList<CharCount> getCharCount(String word){
+        ArrayList<CharCount> result = new ArrayList<>();
+        for(int x = 0; x < word.length(); x++){
+            int count = 1;
+            for(int y = x+1; y < word.length(); y++){
+                if(word.charAt(y) != word.charAt(x))
+                    break;
+                x++;
+                count++;
+            }
+            result.add(new CharCount(word.charAt(x), count));
+            
+        }
+        return result;
+    }
+}

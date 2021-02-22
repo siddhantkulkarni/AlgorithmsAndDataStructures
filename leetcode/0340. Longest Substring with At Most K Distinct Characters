@@ -1,0 +1,57 @@
+/*
+340. Longest Substring with At Most K Distinct Characters
+
+Given a string s and an integer k, return the length of the longest substring of s that contains at most k distinct characters.
+
+ 
+
+Example 1:
+
+Input: s = "eceba", k = 2
+Output: 3
+Explanation: The substring is "ece" with length 3.
+Example 2:
+
+Input: s = "aa", k = 1
+Output: 2
+Explanation: The substring is "aa" with length 2.
+ 
+
+Constraints:
+
+1 <= s.length <= 5 * 104
+0 <= k <= 50
+
+*/
+class Solution {
+    public int lengthOfLongestSubstringKDistinct(String s, int k) {
+        if(k == 0) return 0;
+        if(s.length() < k) return s.length();
+        HashMap<Character, Integer> map = new HashMap<>();
+        int start = 0, end = 0, max = k;
+        while(end < s.length()){
+            
+            char next = s.charAt(end);
+            if(map.keySet().size() < k || map.containsKey(next)){
+                map.put(next, map.getOrDefault(next, 0) + 1);
+                end++;
+            }else{
+                
+                while(map.keySet().size() >= k){
+                    char first = s.charAt(start++);
+                    int count = map.get(first);
+                    
+                    if(count == 1){
+                        map.remove(first);
+                    }else{
+                        map.put(first, count - 1);
+                    }
+                    
+                }
+            }
+            max = Math.max(max, end - start);
+        }
+        return max;
+    }
+}
+

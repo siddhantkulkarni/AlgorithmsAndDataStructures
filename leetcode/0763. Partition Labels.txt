@@ -15,6 +15,82 @@ Note:
 S will have length in range [1, 500].
 S will consist of lowercase letters ('a' to 'z') only.
 '''
+//JAVA
+class Partition implements Comparable<Partition>{
+    int start, end;
+    public Partition(int start, int end){
+        this.start = start;
+        this.end = end;
+    }
+    
+    @Override
+    public int compareTo(Partition another){
+        return this.start - another.start;
+    }
+    
+    public String toString(){
+        return "Start:"+start+" End:"+end;
+    }
+    
+    public void mergePartition(Partition another){
+        this.end = another.end;
+    }
+}
+class Solution {
+    public List<Integer> partitionLabels(String S) {
+        
+        int[][] firstLast = new int[2][26];
+        Arrays.fill(firstLast[0], -1);
+        Arrays.fill(firstLast[1], -1);
+        for(int x = 0; x < S.length(); x++){
+            int ind = S.charAt(x) - 97;
+            if(firstLast[0][ind] == -1){
+                firstLast[0][ind] = x;
+                firstLast[1][ind] = x;
+            }else{
+                firstLast[1][ind] = Math.max(firstLast[1][ind], x);
+            }
+        }
+        PriorityQueue<Partition> q = new PriorityQueue<Partition>();
+        for(int x = 0; x < 26; x++){
+            if(firstLast[0][x] != -1){
+                q.add(new Partition(firstLast[0][x], firstLast[1][x]));
+            }
+        }
+        
+        List<Integer> result = new ArrayList<Integer>();
+        if(q.size() == 0) return result;
+        List<Partition> list = new ArrayList<Partition>();
+        while(!q.isEmpty()) list.add(q.poll());
+        int start = 0, end = 1;
+        while(list.size() > 1 && end < list.size()){
+            Partition first = list.get(start);
+            Partition next = list.get(end);
+            if(next.end <= first.end){
+                list.remove(end);
+            }else{
+                if(next.start <= first.end){
+                    first.mergePartition(next);
+                    list.remove(end);
+                }else{
+                    start = end;
+                    end++;
+                }
+            }
+            
+        }
+        
+        for(Partition p: list){
+            result.add((p.end - p.start) + 1);
+        }
+        return result;
+        
+    }
+    
+    
+}
+
+'''
 class Solution:
     def partitionLabels(self, S: str) -> List[int]:
         width = dict()
@@ -38,4 +114,5 @@ class Solution:
             current += 1
         partitions.append(end-start+1) #for the last partition
         return(partitions)
+        '''
         

@@ -1,14 +1,6 @@
 /*
 103. Binary Tree Zigzag Level Order Traversal
-Medium
 
-1616
-
-85
-
-Add to List
-
-Share
 Given a binary tree, return the zigzag level order traversal of its nodes' values. (ie, from left to right, then right to left for the next level and alternate between).
 
 For example:
@@ -33,7 +25,7 @@ return its zigzag level order traversal as:
  *     TreeNode right;
  *     TreeNode(int x) { val = x; }
  * }
- */
+ 
 class Solution {
     public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
         List<List<Integer>> result = new ArrayList();
@@ -63,4 +55,57 @@ class Solution {
         traverseTree(root.right, level + 1, result);
     }
     
+}*/
+
+//FASTER BFS SOLUTION
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        int level = 0;
+        List<List<Integer>> result = new ArrayList<>();
+        if(root == null) return result;
+        List<TreeNode> temp = new ArrayList<>();
+        temp.add(root);
+        while(temp.size() > 0){
+            int currentSize = temp.size();
+            List<TreeNode> next = new ArrayList<>();
+            List<Integer> forCurrent = new ArrayList<>();
+            
+            for(int x = 0; x < currentSize; x++){
+                TreeNode node = temp.get(x);
+                if(node.left != null) next.add(node.left);
+                if(node.right != null) next.add(node.right);
+            }
+            
+            if(level % 2 == 0){
+                for(int x = 0; x < currentSize; x++){
+                    forCurrent.add(temp.get(x).val);
+                }
+            }else{
+                for(int x = currentSize - 1; x >= 0; x--){
+                    forCurrent.add(temp.get(x).val);
+                }
+            }
+            
+            level++;
+            result.add(forCurrent);
+            temp = next;
+        }
+        return result;
+        
+    }
 }

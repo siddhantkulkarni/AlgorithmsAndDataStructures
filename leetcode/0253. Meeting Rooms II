@@ -1,0 +1,82 @@
+/*
+253. Meeting Rooms II
+Medium
+
+3465
+
+56
+
+Add to List
+
+Share
+Given an array of meeting time intervals intervals where intervals[i] = [starti, endi], return the minimum number of conference rooms required.
+
+ 
+
+Example 1:
+
+Input: intervals = [[0,30],[5,10],[15,20]]
+Output: 2
+Example 2:
+
+Input: intervals = [[7,10],[2,4]]
+Output: 1
+ 
+
+Constraints:
+
+1 <= intervals.length <= 104
+0 <= starti < endi <= 106
+
+*/
+class Meeting implements Comparable<Meeting>{
+    int start, end;
+    public Meeting(int s, int e){start = s; end = e;}
+    public int compareTo(Meeting another){
+        return this.start - another.start == 0 
+                ? this.end - another.end
+                : this.start - another.start;
+    }
+}
+
+class Room implements Comparable<Room>{
+    int start, end;
+    public Room(int s, int e){start = s; end = e;}
+    public int compareTo(Room another){
+        return this.end - another.end == 0 
+                ? this.start - another.start 
+                : this.end - another.end;
+    }
+}
+class Solution {
+    public int minMeetingRooms(int[][] intervals) {
+        PriorityQueue<Meeting> meetings = new PriorityQueue<>();
+        for(int[] meeting: intervals)
+            meetings.add(new Meeting(meeting[0],meeting[1]));
+        
+        if(meetings.size() <= 1)
+            meetings.size();
+        
+        PriorityQueue<Room> rooms = new PriorityQueue<>();
+        int count = 0;
+        while(!meetings.isEmpty()){
+            Meeting a = meetings.poll();
+            if(rooms.size() == 0){
+                rooms.add (new Room(a.start, a.end));
+            }else{
+                Room current = rooms.poll();
+                if(current.end > a.start){
+                    if(a.end < current.end){
+                        rooms.add(new Room(a.start, a.end));
+                    }else{
+                        rooms.add(new Room(current.end, a.end));
+                    }
+                    rooms.add(current);
+                }else{
+                    rooms.add(new Room(a.start, a.end));
+                }
+            }
+        }
+        return rooms.size();
+    }
+}

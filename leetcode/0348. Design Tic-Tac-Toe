@@ -1,4 +1,4 @@
-/*
+/*/*
 348. Design Tic-Tac-Toe
 Medium
 
@@ -118,6 +118,70 @@ class TicTacToe {
         
         return 0;
         
+    }
+}
+
+/**
+ * Your TicTacToe object will be instantiated and called as such:
+ * TicTacToe obj = new TicTacToe(n);
+ * int param_1 = obj.move(row,col,player);
+ */*/
+ 
+ class TicTacToe {
+    Map<Integer, Integer> diagA, diagB;
+    ArrayList<HashMap<Integer, Integer>> rowCounts, colCounts;
+    int N;
+    /** Initialize your data structure here. */
+    public TicTacToe(int n) {
+        rowCounts = new ArrayList<>();
+        colCounts = new ArrayList<>();
+        for(int x = 0; x < n; x++){
+            rowCounts.add(new HashMap<>());
+            colCounts.add(new HashMap<>());
+        }
+        N = n;
+        diagA = new HashMap<>();
+        diagB = new HashMap<>();
+    }
+    
+    /** Player {player} makes a move at ({row}, {col}).
+        @param row The row of the board.
+        @param col The column of the board.
+        @param player The player, can be either 1 or 2.
+        @return The current winning condition, can be either:
+                0: No one wins.
+                1: Player 1 wins.
+                2: Player 2 wins. */
+    public int move(int row, int col, int player) {
+        HashMap<Integer, Integer> currentRow = rowCounts.get(row);
+        HashMap<Integer, Integer> currentCol = colCounts.get(col);
+        currentRow.put(player, currentRow.getOrDefault(player, 0) + 1);
+        if(currentRow.keySet().size() == 1 &&
+           currentRow.get(currentRow.keySet().toArray()[0]) == N)
+            return player;
+        currentCol.put(player, currentCol.getOrDefault(player, 0) + 1);
+        if(currentCol.keySet().size() == 1 &&
+           currentCol.get(currentCol.keySet().toArray()[0]) == N)
+            return player;
+        
+        if(row == col){
+            diagA.put(player, diagA.getOrDefault(player, 0) + 1);
+            if(diagA.keySet().size() == 1 &&
+               diagA.get(diagA.keySet().toArray()[0]) == N)
+                return player;
+        }
+        
+        if(isOnDiagB(row, col)){
+            diagB.put(player, diagB.getOrDefault(player, 0) + 1);
+            if(diagB.keySet().size() == 1 &&
+               diagB.get(diagB.keySet().toArray()[0]) == N)
+                return player;
+        }
+        return 0;
+    }
+    
+    private boolean isOnDiagB(int row, int col){
+        return row == (N - col)-1;
     }
 }
 

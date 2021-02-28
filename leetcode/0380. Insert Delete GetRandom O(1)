@@ -33,34 +33,42 @@ randomSet.insert(2);
 randomSet.getRandom();
 */
 class RandomizedSet {
-    HashSet<Integer> store;
+    HashMap<Integer, Integer> valInd;
+    ArrayList<Integer> list;
+    Random rand;
     /** Initialize your data structure here. */
     public RandomizedSet() {
-        store = new HashSet<Integer>();   
+        valInd = new HashMap<>();
+        list = new ArrayList<>();
+        rand = new Random();
     }
     
     /** Inserts a value to the set. Returns true if the set did not already contain the specified element. */
     public boolean insert(int val) {
-        if(store.contains(val))
+        if(valInd.containsKey(val))
             return false;
-        store.add(val);
+        valInd.put(val, list.size());
+        list.add(list.size(), val);
         return true;
     }
     
     /** Removes a value from the set. Returns true if the set contained the specified element. */
     public boolean remove(int val) {
-        if(store.contains(val)){
-            store.remove(val);
-            return true;
-        }
-        return false;
+        if(!valInd.containsKey(val))
+            return false;
+        int ind = valInd.get(val);
+        int lastElement = list.get(list.size() - 1);
+        list.set(ind, lastElement);
+        valInd.put(lastElement, ind);
+        
+        list.remove(list.size() - 1);
+        valInd.remove(val);
+        return true;
     }
     
     /** Get a random element from the set. */
     public int getRandom() {
-        ArrayList<Integer> list = new ArrayList<Integer>(store);
-        int index = new Random().nextInt(store.size());
-        return list.get(index);
+        return list.get(rand.nextInt(list.size()));
     }
 }
 

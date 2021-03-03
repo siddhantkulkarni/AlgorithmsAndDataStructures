@@ -1,0 +1,64 @@
+/*
+438. Find All Anagrams in a String
+
+Given a string s and a non-empty string p, find all the start indices of p's anagrams in s.
+
+Strings consists of lowercase English letters only and the length of both strings s and p will not be larger than 20,100.
+
+The order of output does not matter.
+
+Example 1:
+
+Input:
+s: "cbaebabacd" p: "abc"
+
+Output:
+[0, 6]
+
+Explanation:
+The substring with start index = 0 is "cba", which is an anagram of "abc".
+The substring with start index = 6 is "bac", which is an anagram of "abc".
+Example 2:
+
+Input:
+s: "abab" p: "ab"
+
+Output:
+[0, 1, 2]
+
+Explanation:
+The substring with start index = 0 is "ab", which is an anagram of "ab".
+The substring with start index = 1 is "ba", which is an anagram of "ab".
+The substring with start index = 2 is "ab", which is an anagram of "ab".
+*/
+class Solution {
+    public List<Integer> findAnagrams(String s, String p) {
+        
+        List<Integer> result = new ArrayList<>();
+        if(s.length() == 0 || p.length() == 0 || p.length() > s.length()) 
+            return result;
+        
+        int[] target = getStringMap(p, 0, p.length());
+        int[] current = getStringMap(s, 0, p.length());
+        if(Arrays.equals(target,current)) result.add(0);
+        
+        for(int x = 1; x <= s.length() - p.length(); x++){
+            char prev = s.charAt(x - 1);
+            current[prev - 97]--;
+            char currChar = s.charAt(x + p.length() - 1);
+            current[currChar - 97]++;
+            if(Arrays.equals(target,current)){
+                result.add(x);
+            }
+        }
+        return result;
+    }
+    
+    private int[] getStringMap(String s, int start, int end){
+        int[] result = new int[26];
+        for(int x = start; x < end; x++){
+            result[s.charAt(x) - 97]++;
+        }
+        return result;
+    }
+}

@@ -1,0 +1,91 @@
+/*
+311. Sparse Matrix Multiplication
+
+Given two sparse matrices A and B, return the result of AB.
+
+You may assume that A's column number is equal to B's row number.
+
+Example:
+
+Input:
+
+A = [
+  [ 1, 0, 0],
+  [-1, 0, 3]
+]
+
+B = [
+  [ 7, 0, 0 ],
+  [ 0, 0, 0 ],
+  [ 0, 0, 1 ]
+]
+
+Output:
+
+     |  1 0 0 |   | 7 0 0 |   |  7 0 0 |
+AB = | -1 0 3 | x | 0 0 0 | = | -7 0 3 |
+                  | 0 0 1 |
+ 
+
+Constraints:
+
+1 <= A.length, B.length <= 100
+1 <= A[i].length, B[i].length <= 100
+-100 <= A[i][j], B[i][j] <= 100
+
+*/
+class Solution {
+    public int[][] multiply(int[][] A, int[][] B) {
+        if(A.length == 0 || B.length == 0) return new int[0][0];
+        if(A[0].length != B.length) return new int[0][0];
+        int ROWS = A.length, COLS = B[0].length;
+        HashMap<Integer, HashMap<Integer, Integer>> matA = getRowSparseRepresentation(A);
+        HashMap<Integer, HashMap<Integer, Integer>> matB = getColSparseRepresentation(B);
+        int[][] result = new int[ROWS][COLS];
+        for(int x = 0; x < ROWS; x++){
+            for(int y = 0; y < COLS; y++){
+                if(matA.containsKey(x) && matB.containsKey(y)){
+                    HashMap<Integer, Integer> rowFromFirst = matA.get(x);
+                    HashMap<Integer, Integer> colFromSecond = matB.get(y);
+                    int dot = 0;
+                    for(int r : rowFromFirst.keySet()){
+                        dot += (rowFromFirst.get(r) * colFromSecond.getOrDefault(r, 0));
+                    }
+                    result[x][y] = dot;
+                }    
+            }
+        }
+        return result;
+    }
+    
+    private HashMap<Integer, HashMap<Integer, Integer>> getRowSparseRepresentation(int[][] mat){
+        HashMap<Integer, HashMap<Integer, Integer>> result = new HashMap<>();
+        for(int r = 0; r < mat.length; r++){
+            HashMap<Integer, Integer> row = new HashMap<>();
+            for(int c = 0; c < mat[0].length; c++){
+                if(mat[r][c] != 0){
+                    row.put(c, mat[r][c]);
+                }
+            }
+            if(row.size() > 0)
+                result.put(r, row);
+        }
+        return result;
+    }
+    
+    private HashMap<Integer, HashMap<Integer, Integer>> getColSparseRepresentation(int[][] mat){
+        HashMap<Integer, HashMap<Integer, Integer>> result = new HashMap<>();
+        
+        for(int c = 0; c < mat[0].length; c++){
+            HashMap<Integer, Integer> col = new HashMap<>();
+            for(int r = 0; r < mat.length; r++){
+                if(mat[r][c] != 0){
+                    col.put(r, mat[r][c]);
+                }
+            }
+            if(col.size() > 0)
+                result.put(c, col);
+        }
+        return result;
+    }
+}

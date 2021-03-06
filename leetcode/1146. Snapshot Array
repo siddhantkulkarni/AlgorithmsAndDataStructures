@@ -54,7 +54,42 @@ class SnapshotArray {
         return targetSnapshot.containsKey(index) ? targetSnapshot.get(index) : 0;
     }
 }
+class SnapshotArray1 {
+    TreeMap<Integer, Integer>[] deltas;
+    int id;
+    public SnapshotArray(int length) {
+        deltas = new TreeMap[length];
+        for(int x = 0; x < length; x++)
+            deltas[x] = new TreeMap<>();
+        id = 0;
+    }
+    
+    public void set(int index, int val) {
+        deltas[index].put(id, val);
+    }
+    
+    public int snap() {
+        id++;
+        return id - 1;
+    }
+    
+    public int get(int index, int snap_id) {
+        if(deltas[index].containsKey(snap_id))
+            return deltas[index].get(snap_id);
+        if(deltas[index].lowerKey(snap_id) == null)
+            return 0;
+        return deltas[index].get(deltas[index].lowerKey(snap_id));
+        
+    }
+}
 
+/**
+ * Your SnapshotArray object will be instantiated and called as such:
+ * SnapshotArray obj = new SnapshotArray(length);
+ * obj.set(index,val);
+ * int param_2 = obj.snap();
+ * int param_3 = obj.get(index,snap_id);
+ */
 /**
  * Your SnapshotArray object will be instantiated and called as such:
  * SnapshotArray obj = new SnapshotArray(length);

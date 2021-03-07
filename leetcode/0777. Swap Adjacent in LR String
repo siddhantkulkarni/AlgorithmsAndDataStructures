@@ -1,0 +1,74 @@
+/*
+777. Swap Adjacent in LR String
+
+In a string composed of 'L', 'R', and 'X' characters, like "RXXLRXRXL", a move consists of either replacing one occurrence of "XL" with "LX", or replacing one occurrence of "RX" with "XR". Given the starting string start and the ending string end, return True if and only if there exists a sequence of moves to transform one string to the other.
+
+ 
+
+Example 1:
+
+Input: start = "RXXLRXRXL", end = "XRLXXRRLX"
+Output: true
+Explanation: We can transform start to end following these steps:
+RXXLRXRXL ->
+XRXLRXRXL ->
+XRLXRXRXL ->
+XRLXXRRXL ->
+XRLXXRRLX
+Example 2:
+
+Input: start = "X", end = "L"
+Output: false
+Example 3:
+
+Input: start = "LLR", end = "RRL"
+Output: false
+Example 4:
+
+Input: start = "XL", end = "LX"
+Output: true
+Example 5:
+
+Input: start = "XLLR", end = "LXLX"
+Output: false
+ 
+
+Constraints:
+
+1 <= start.length <= 104
+start.length == end.length
+Both start and end will only consist of characters in 'L', 'R', and 'X'.
+
+*/
+class Solution {
+    public boolean canTransform(String start, String end) {
+        
+        if(start.length() != end.length()) return false;
+        int s = 0, e = 0, N = start.length();
+        while(s < N && e < N){
+            while(s < N && (start.charAt(s) != 'R' && start.charAt(s) != 'L'))
+                s++;
+            while(e < N && (end.charAt(e) != 'R' && end.charAt(e) != 'L'))
+                e++;
+            if(s == N && e == N) return true;
+            if(s == N || e == N) return false;
+            if(start.charAt(s) != end.charAt(e)) return false;
+            if(start.charAt(s) == 'L' && s < e) return false;
+            if(start.charAt(s) == 'R' && s > e) return false;
+            s++;
+            e++;
+        }
+        while(s < start.length()){
+            if(start.charAt(s) == 'L' || start.charAt(s) == 'R')
+                return false;
+            s++;
+        }
+        
+        while(e < end.length()){
+            if(end.charAt(e) == 'L' || end.charAt(e) == 'R')
+                return false;
+            e++;
+        }
+        return true;
+    }
+}

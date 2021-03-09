@@ -24,3 +24,25 @@ class Solution:
                     nums[x] = 0
                 ptr += 1
                 
+'''
+class Solution {
+    public void moveZeroes(int[] nums) {
+        
+        if(nums.length < 2) return;
+        int countZeros = 0;
+        for(int num: nums){
+            if(num == 0) countZeros++;
+        }
+        int ptr = 0;
+        for(int x = 0; x < nums.length; x++){
+            if(nums[x] != 0){
+                nums[ptr++] = nums[x];
+            }
+        }
+        
+        for(int x = nums.length - countZeros; x < nums.length; x++){
+            nums[x] = 0;
+        }
+    }
+}
+'''

@@ -42,3 +42,29 @@ class Solution {
         return counts;
     }
 }
+/*
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+       
+        if(s.length() < 2) return s.length();
+        
+       HashSet<Character> seen = new HashSet<>();
+        int start = 0, end = 1, len = 1, maxLen = 1;
+        seen.add(s.charAt(start));
+        while(end < s.length()){
+            char ch = s.charAt(end);
+            if(seen.contains(ch)){
+                seen.remove(s.charAt(start));
+                start++;
+                len--;
+            }else{
+                seen.add(ch);
+                len++;
+                end++;
+            }
+            maxLen = Math.max(len, maxLen);
+        }
+        return maxLen;
+    }
+}
+*/

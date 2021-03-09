@@ -74,3 +74,41 @@ class Solution {
         populateMap(root.right, vLevel + 1,hLevel + 1, map);
     }
 }
+/*
+class Solution {
+    public List<List<Integer>> verticalOrder(TreeNode root) {
+        List<List<Integer>> result = new ArrayList<>();
+        TreeMap<Integer, List<Integer>> verticalNodes = new TreeMap<>();
+        if(root == null) return result;
+        Queue<TreeNode> q = new LinkedList<>();
+        HashMap<TreeNode, Integer> nodeLevel = new HashMap<>();
+        q.add(root);
+        nodeLevel.put(root, 0);
+        
+        while(!q.isEmpty()){
+            int size = q.size();
+            for(int x = 0; x < size; x++){
+                TreeNode current = q.poll();
+                int currentLevel = nodeLevel.get(current);
+                List<Integer> nodesFromCurrentLevel = verticalNodes.getOrDefault(currentLevel, new ArrayList<>());
+                nodesFromCurrentLevel.add(current.val);
+                verticalNodes.put(currentLevel, nodesFromCurrentLevel);
+                if(current.left != null){
+                    nodeLevel.put(current.left, currentLevel - 1);
+                    q.add(current.left);
+                }
+                if(current.right != null){
+                    nodeLevel.put(current.right, currentLevel + 1);
+                    q.add(current.right);
+                }
+            }
+            
+        }
+        for(int l: verticalNodes.keySet()){
+            result.add(verticalNodes.get(l));
+        }
+        return result;
+        
+    }
+}
+*/

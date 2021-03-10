@@ -1,0 +1,75 @@
+/*
+839. Similar String Groups
+
+Two strings X and Y are similar if we can swap two letters (in different positions) of X, so that it equals Y. Also two strings X and Y are similar if they are equal.
+
+For example, "tars" and "rats" are similar (swapping at positions 0 and 2), and "rats" and "arts" are similar, but "star" is not similar to "tars", "rats", or "arts".
+
+Together, these form two connected groups by similarity: {"tars", "rats", "arts"} and {"star"}.  Notice that "tars" and "arts" are in the same group even though they are not similar.  Formally, each group is such that a word is in the group if and only if it is similar to at least one other word in the group.
+
+We are given a list strs of strings where every string in strs is an anagram of every other string in strs. How many groups are there?
+
+ 
+
+Example 1:
+
+Input: strs = ["tars","rats","arts","star"]
+Output: 2
+Example 2:
+
+Input: strs = ["omv","ovm"]
+Output: 1
+ 
+
+Constraints:
+
+1 <= strs.length <= 300
+1 <= strs[i].length <= 300
+strs[i] consists of lowercase letters only.
+All words in strs have the same length and are anagrams of each other.
+*/
+class Solution {
+    public int numSimilarGroups(String[] strs) {
+        if(strs.length < 2) return strs.length;
+        Map<String, String> parents = new HashMap<>();
+        for (String str: strs) {
+            parents.put(str, str);
+        }
+        
+        for(int x = 0; x < strs.length; x++){
+            for(int y = x + 1; y < strs.length; y++){
+                if(areSimilar(strs[x], strs[y])){
+                    String px = find(parents, strs[x]);
+                    String py = find(parents, strs[y]);
+                    if(!px.equals(py)){
+                        parents.put(py, px);
+                    }
+                }
+            }
+        }
+        
+        Set<String> groups = new HashSet<>();
+        for (String str: strs) {
+            groups.add(find(parents, str));
+        }
+        return groups.size();
+        
+        
+    }
+    
+    public String find(Map<String, String> parents, String str) {
+        while (!parents.get(str).equals(str)) {
+            parents.put(str, parents.get(parents.get(str)));
+            str = parents.get(str);
+        }
+        return str;
+    }
+    
+    private boolean areSimilar(String a, String b) {
+        int diff = 0;
+        for (int x = 0; x < a.length(); x++)
+            if (a.charAt(x) != b.charAt(x))
+                diff++;
+        return diff <= 2;
+    }
+}

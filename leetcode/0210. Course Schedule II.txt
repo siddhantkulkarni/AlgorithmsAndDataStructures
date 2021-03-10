@@ -84,3 +84,57 @@ class Solution {
         
     }
 }
+
+/*ANOTHER
+class Solution {
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        //HashMap<Integer, HashSet<Integer>> reqSub = new HashMap<Integer, HashSet<Integer>>();
+        HashMap<Integer, HashSet<Integer>> subReq = new HashMap<Integer, HashSet<Integer>>();
+        
+        for(int[] edge: prerequisites){
+             //current = reqSub.getOrDefault(edge[1], new HashSet<Integer>());
+            //current.add(edge[0]);
+            //reqSub.put(edge[1], current);
+            HashSet<Integer> current = subReq.getOrDefault(edge[0], new HashSet<Integer>());
+            current.add(edge[1]);
+            subReq.put(edge[0], current);
+        }
+        for(int x = 0; x < numCourses; x++){
+            if(!subReq.containsKey(x)){
+                subReq.put(x, new HashSet<Integer>());
+            }
+        }
+        
+        
+        
+        int[] result = new int[numCourses];
+        int ptr = 0;
+        while(subReq.keySet().size() > 0){
+            int toTake = -1;
+            for(int key: subReq.keySet()){
+                HashSet<Integer> current = subReq.get(key);
+                //System.out.println("Reqs for " + key + "= " +current.size());
+                if(current.size() == 0){
+                    toTake = key;
+                    break;
+                }
+            }
+            //System.out.println(subReq);
+            if(toTake == -1)
+                return new int[0];
+            else{
+                result[ptr++] = toTake;
+                subReq.remove(toTake);
+                for(int key: subReq.keySet()){
+                    HashSet<Integer> current = subReq.get(key);
+                    if(current.contains(toTake)){
+                        current.remove(toTake);
+                        subReq.put(key,current);
+                    }
+                }
+            }
+            
+        }
+        return result;
+    }
+}*/

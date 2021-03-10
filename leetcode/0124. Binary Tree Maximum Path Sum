@@ -66,3 +66,21 @@ class Solution {
         return Math.max(root.val, Math.max(root.val + left, root.val + right));
     }
 }
+/*ANOTHER
+class Solution {
+    int max = Integer.MIN_VALUE;
+    public int maxPathSum(TreeNode root) {
+        int temp = helper(root);
+        return Math.max(max, temp);
+    }
+    private int helper(TreeNode root){
+        if(root == null) return 0;
+        int left = helper(root.left);
+        int right = helper(root.right);
+        max = Math.max(max, Math.max(left + root.val, Math.max(right + root.val, root.val) ));
+        max = Math.max(max, left + root.val + right);
+        // System.out.println(root.val + " returning " + Math.max(root.val, Math.max(left, right) + root.val));
+        return Math.max(root.val, Math.max(left, right) + root.val);
+    }
+}
+*/

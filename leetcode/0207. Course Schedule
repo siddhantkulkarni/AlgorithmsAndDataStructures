@@ -1,0 +1,82 @@
+/*
+207. Course Schedule
+
+There are a total of numCourses courses you have to take, labeled from 0 to numCourses - 1. You are given an array prerequisites where prerequisites[i] = [ai, bi] indicates that you must take course bi first if you want to take course ai.
+
+For example, the pair [0, 1], indicates that to take course 0 you have to first take course 1.
+Return true if you can finish all courses. Otherwise, return false.
+
+ 
+
+Example 1:
+
+Input: numCourses = 2, prerequisites = [[1,0]]
+Output: true
+Explanation: There are a total of 2 courses to take. 
+To take course 1 you should have finished course 0. So it is possible.
+Example 2:
+
+Input: numCourses = 2, prerequisites = [[1,0],[0,1]]
+Output: false
+Explanation: There are a total of 2 courses to take. 
+To take course 1 you should have finished course 0, and to take course 0 you should also have finished course 1. So it is impossible.
+ 
+
+Constraints:
+
+1 <= numCourses <= 105
+0 <= prerequisites.length <= 5000
+prerequisites[i].length == 2
+0 <= ai, bi < numCourses
+All the pairs prerequisites[i] are unique.
+*/
+class Solution {
+    
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        HashMap<Integer, Set<Integer>> preSub = new HashMap<>();
+        HashMap<Integer, Set<Integer>> subPre = new HashMap<>();
+        for(int x = 0; x < numCourses; x++){
+            preSub.put(x, new HashSet<>());
+            subPre.put(x, new HashSet<>());
+        }
+        
+        for(int[] req : prerequisites){
+            addToMap(preSub, req[0], req[1]);
+            addToMap(subPre, req[1], req[0]);
+        }
+        
+        boolean foundAtLeastOne = true;
+        while(foundAtLeastOne){
+            foundAtLeastOne = false;
+            
+            for(int x = 0; x < numCourses; x++){
+                if(!subPre.containsKey(x)) continue;
+                Set<Integer> reqsFor = subPre.get(x);
+                if(reqsFor.size() == 0){
+                    foundAtLeastOne = true;
+                    // System.out.println(x + "->" + preSub);
+                    removeFromMap(x, subPre, preSub);
+                }
+            }
+        }
+        
+        return subPre.size() == 0;
+    }
+    
+    private void addToMap(HashMap<Integer, Set<Integer>> map, int key,int value){
+        Set<Integer> current = map.get(key);
+        current.add(value);
+        map.put(key, current);
+    }
+    
+    private void removeFromMap(int sub, HashMap<Integer, Set<Integer>> subPre, HashMap<Integer, Set<Integer>> preSub){
+        Set<Integer> reqTo = preSub.get(sub);
+        for(int reqFor: reqTo){
+            Set<Integer> current = subPre.get(reqFor);
+            current.remove(sub);
+            subPre.put(reqFor, current);
+        }
+        subPre.remove(sub);
+        preSub.remove(sub);
+    }
+}

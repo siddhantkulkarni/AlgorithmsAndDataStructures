@@ -50,3 +50,23 @@ class Solution:
         
         count += len(para)
         return(count)
+        
+'''
+JAVA
+class Solution {
+    public int minAddToMakeValid(String S) {
+        int count = 0;
+        Stack<Character> stack = new Stack<>();
+        for(int x = 0; x < S.length(); x++){
+            char current = S.charAt(x);
+            if(current ==')'){
+                if(!stack.isEmpty()) stack.pop();
+                else count++;
+            }else{
+                stack.push(current);
+            }
+        }
+        return count + stack.size();
+    }
+}
+'''

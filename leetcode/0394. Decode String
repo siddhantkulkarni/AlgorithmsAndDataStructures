@@ -78,3 +78,39 @@ class Solution {
         return result.toString();
     }
 }
+/*ANOTHER WAY
+class Solution {
+    public String decodeString(String s) {
+        Stack<Character> stack = new Stack<>();
+        StringBuilder result = new StringBuilder();
+        for(int x = 0; x < s.length(); x++){
+            char ch = s.charAt(x);
+            if(ch == ']'){
+                StringBuilder current = new StringBuilder();
+                while(!stack.empty() && stack.peek() != '['){
+                    current.append(stack.pop());
+                }
+                stack.pop();
+                StringBuilder num = new StringBuilder();
+                while(!stack.empty() && Character.isDigit(stack.peek())){
+                    num.append(stack.pop());
+                }
+               num.reverse(); current.append(current.toString().repeat(Integer.parseInt(num.toString())-1));
+                String temp = current.toString();
+                
+                for(int y = temp.length() - 1; y >= 0; y--){
+                    stack.push(temp.charAt(y));
+                }
+            }else{
+                stack.push(ch);
+            }
+        }
+        
+        while(!stack.empty()){
+            result.append(stack.pop());
+        }
+        result.reverse();
+        return result.toString();
+    }
+}
+*/

@@ -1,0 +1,63 @@
+/*
+547. Number of Provinces
+
+There are n cities. Some of them are connected, while some are not. If city a is connected directly with city b, and city b is connected directly with city c, then city a is connected indirectly with city c.
+
+A province is a group of directly or indirectly connected cities and no other cities outside of the group.
+
+You are given an n x n matrix isConnected where isConnected[i][j] = 1 if the ith city and the jth city are directly connected, and isConnected[i][j] = 0 otherwise.
+
+Return the total number of provinces.
+
+ 
+
+Example 1:
+
+
+Input: isConnected = [[1,1,0],[1,1,0],[0,0,1]]
+Output: 2
+Example 2:
+
+
+Input: isConnected = [[1,0,0],[0,1,0],[0,0,1]]
+Output: 3
+ 
+
+Constraints:
+
+1 <= n <= 200
+n == isConnected.length
+n == isConnected[i].length
+isConnected[i][j] is 1 or 0.
+isConnected[i][i] == 1
+isConnected[i][j] == isConnected[j][i]
+*/
+class Solution {
+    public int findCircleNum(int[][] isConnected) {
+        int[] parents = new int[isConnected.length];
+        Arrays.fill(parents,-1);
+        for(int x = 0; x < isConnected.length; x++){
+            for(int y = 0; y < isConnected.length; y++){
+                if(isConnected[x][y] == 1 && x!= y) {
+                    int px = find(parents, x);
+                    int py = find(parents, y);
+                    if(px != py)
+                        parents[px] = py;
+                }
+            }
+        }
+        
+        int count = 0;
+        for(int p: parents)
+            if(p == -1) count++;
+        return count;
+    }
+    
+    private int find(int[] parents, int node){
+        if(parents[node] == -1)
+            return node;
+        return find(parents, parents[node]);
+    }
+    
+    
+}

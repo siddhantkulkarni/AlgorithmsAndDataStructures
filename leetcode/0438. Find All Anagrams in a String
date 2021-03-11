@@ -30,6 +30,45 @@ Explanation:
 The substring with start index = 0 is "ab", which is an anagram of "ab".
 The substring with start index = 1 is "ba", which is an anagram of "ab".
 The substring with start index = 2 is "ab", which is an anagram of "ab".
+class Solution {
+    public List<Integer> findAnagrams(String s, String p) {
+        List<Integer> result = new ArrayList<>();
+        if(s.length() < p.length()) return result;
+        HashMap<Character, Integer> target = getMapOfString(p);
+        HashMap<Character, Integer> source = getMapOfString(s.substring(0, p.length()));
+        if(areAnagrams(target, source))
+            result.add(0);
+        // System.out.println(source + "-" + target);
+        for(int x = 1; x <= (s.length() - p.length()); x++){
+            // System.out.println(x + "->" + (x + p.length() - 1));
+            char prev = s.charAt(x - 1);
+            char next = s.charAt(x + p.length() - 1);
+            if(source.get(prev) == 1)
+                source.remove(prev);
+            else
+                source.put(prev, source.get(prev) - 1);
+            source.put(next, source.getOrDefault(next, 0) + 1);
+            // System.out.println(source + "-" + target);
+            if(areAnagrams(target, source))
+                result.add(x);
+        }
+        return result;
+    }
+    
+    private HashMap<Character, Integer> getMapOfString(String str){
+        HashMap<Character, Integer> result = new HashMap<>();
+        for(char ch: str.toCharArray()){
+            result.put(ch, result.getOrDefault(ch, 0) + 1);
+        }
+        return result;
+    }
+    
+    private boolean areAnagrams(HashMap<Character, Integer> target, HashMap<Character, Integer> source){
+        if(target.equals(source))
+            return true;
+        return false;
+    }
+}
 */
 class Solution {
     public List<Integer> findAnagrams(String s, String p) {

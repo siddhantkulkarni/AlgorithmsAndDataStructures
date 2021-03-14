@@ -1,0 +1,53 @@
+/*1047. Remove All Adjacent Duplicates In String
+Easy
+
+1392
+
+93
+
+Add to List
+
+Share
+Given a string S of lowercase letters, a duplicate removal consists of choosing two adjacent and equal letters, and removing them.
+
+We repeatedly make duplicate removals on S until we no longer can.
+
+Return the final string after all such duplicate removals have been made.  It is guaranteed the answer is unique.
+
+ 
+
+Example 1:
+
+Input: "abbaca"
+Output: "ca"
+Explanation: 
+For example, in "abbaca" we could remove "bb" since the letters are adjacent and equal, and this is the only possible move.  The result of this move is that the string is "aaca", of which only "aa" is possible, so the final string is "ca".
+*/
+class Solution {
+    public String removeDuplicates(String S) {
+        int target = 0;
+        while(target < S.length() - 1){
+            if(S.charAt(target) == S.charAt(target+1)){
+                int start = target, end = target + 1;
+                // System.out.println(start + ","+ end);
+                while(start >= 0 && end < S.length() && S.charAt(start) == S.charAt(end)){
+                    start--; end++;
+                }
+                if(start < 0 && end > S.length())
+                    return "";
+                if(start < 0){
+                    S = S.substring(end);
+                    target = 0;
+                }else if(end > S.length()){
+                    S = S.substring(0, start);
+                    break;
+                }else{
+                    S = S.substring(0, start + 1) + S.substring(end); 
+                    target = start;
+                }
+            }else
+                target++;
+        }
+        return S;
+    }
+}
